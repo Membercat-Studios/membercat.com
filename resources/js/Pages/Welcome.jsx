@@ -19,7 +19,7 @@ export default function Welcome({
         const fetchProjects = async () => {
             try {
                 setLoading(true);
-                // TODO: Implement your API call here
+                // TODO: implement api calls
                 const response = await fetch("/api/projects/featured");
                 const data = await response.json();
                 setTopProjects(data);
@@ -162,7 +162,7 @@ export default function Welcome({
                                             key={project.id}
                                             className="rounded-xl bg-zinc-800 border border-zinc-700 p-6"
                                         >
-                                            {/* Project card content */}
+                                            {/* TODO: add project card content */}
                                         </div>
                                     ))}
                                 </div>

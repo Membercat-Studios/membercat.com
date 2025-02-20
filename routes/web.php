@@ -38,13 +38,13 @@ Route::get('/settings', function () {
 })->name('settings');
 
 Route::middleware('guest')->group(function () {
-    // Discord OAuth
+    // discord auth
     Route::get('auth/discord/redirect', [SocialiteController::class, 'discordRedirect'])
         ->name('discord.redirect');
     Route::get('auth/discord/callback', [SocialiteController::class, 'discordCallback'])
         ->name('discord.callback');
 
-    // GitHub OAuth
+    // github auth
     Route::get('auth/github/redirect', [SocialiteController::class, 'githubRedirect'])
         ->name('github.redirect');
     Route::get('auth/github/callback', [SocialiteController::class, 'githubCallback'])
