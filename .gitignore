@@ -15,8 +15,6 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 pnpm-debug.log
-pnpm-lock.yaml
-package-lock.json
 yarn-error.log
 /auth.json
 /.fleet
