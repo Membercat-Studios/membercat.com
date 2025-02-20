@@ -25,7 +25,7 @@ A high quality website built all for Membercat Studios.
 1. Clone the repository:
 
     ```sh
-    git clone https://github.com/yourusername/membercat.git
+    git clone https://github.com/Membercat-Studios/membercat.com.git
     cd membercat
     ```
 
