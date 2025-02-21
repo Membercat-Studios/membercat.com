@@ -1,5 +1,7 @@
 import { Head } from "@inertiajs/react";
+
 import ProfileLayout from "@/Layouts/ProfileLayout";
+
 import DeleteUserForm from "./Partials/DeleteUserForm";
 import UpdatePasswordForm from "./Partials/UpdatePasswordForm";
 import UpdateProfileInformationForm from "./Partials/UpdateProfileInformationForm";

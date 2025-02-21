@@ -1,7 +1,8 @@
 import { Link, usePage } from "@inertiajs/react";
 import { useState, useEffect, useRef } from "react";
-import Logo from "@/Components/Logo";
+
 import Gravatar from "@/Components/Gravatar";
+import Logo from "@/Components/Logo";
 
 const NAV_LINKS = [
     { href: route("home"), label: "Home" },

@@ -3,23 +3,36 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix ."
     },
     "devDependencies": {
+        "@babel/eslint-parser": "^7.26.8",
         "@headlessui/react": "^2.0.0",
         "@iconify/react": "^5.2.0",
         "@inertiajs/react": "^2.0.0",
         "@tailwindcss/postcss": "^4.0.6",
         "@tailwindcss/vite": "^4.0.6",
+        "@typescript-eslint/eslint-plugin": "^8.24.1",
+        "@typescript-eslint/parser": "^8.24.1",
         "@vitejs/plugin-react": "^4.2.0",
         "axios": "^1.7.4",
         "concurrently": "^9.0.1",
+        "eslint": "^9.21.0",
+        "eslint-import-resolver-alias": "^1.1.2",
+        "eslint-plugin-import": "^2.29.1",
+        "eslint-plugin-jsx-a11y": "^6.10.2",
+        "eslint-plugin-react": "^7.37.4",
+        "eslint-plugin-react-hooks": "^5.1.0",
         "laravel-vite-plugin": "^1.2.0",
         "prop-types": "^15.8.1",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "tailwindcss": "^4.0.6",
-        "vite": "^6.0.11"
+        "vite": "^6.0.11",
+        "@eslint/js": "^9.0.0",
+        "globals": "^15.0.0"
     },
     "dependencies": {
         "md5": "^2.3.0"

@@ -1,4 +1,5 @@
 import { Head } from "@inertiajs/react";
+
 import Sidebar from "@/Components/Sidebar/Sidebar";
 import SidebarLink from "@/Components/Sidebar/SidebarLink";
 

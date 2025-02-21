@@ -1,7 +1,8 @@
 import { useForm } from "@inertiajs/react";
-import AdminLayout from "@/Layouts/AdminLayout";
-import Input from "@/Components/Input";
+
 import Button from "@/Components/Button";
+import Input from "@/Components/Input";
+import AdminLayout from "@/Layouts/AdminLayout";
 
 export default function Edit({ user }) {
     const { data, setData, put, processing, errors } = useForm({

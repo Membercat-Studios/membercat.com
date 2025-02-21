@@ -1,7 +1,9 @@
-import { createContext, useState } from "react";
 import { usePage } from "@inertiajs/react";
-import Logo from "@/Components/Logo";
+import { createContext, useState } from "react";
+
 import Gravatar from "@/Components/Gravatar";
+import Logo from "@/Components/Logo";
+
 import SidebarLink from "./SidebarLink";
 
 export const SidebarContext = createContext();

@@ -1,8 +1,9 @@
-import { useState } from "react";
 import { router } from "@inertiajs/react";
-import AdminLayout from "@/Layouts/AdminLayout";
-import Input from "@/Components/Input";
+import { useState } from "react";
+
 import Button from "@/Components/Button";
+import Input from "@/Components/Input";
+import AdminLayout from "@/Layouts/AdminLayout";
 
 export default function Users({ users }) {
     const [search, setSearch] = useState("");

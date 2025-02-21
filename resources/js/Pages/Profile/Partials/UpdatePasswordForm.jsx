@@ -1,7 +1,8 @@
-import Input from "@/Components/Input";
-import Button from "@/Components/Button";
 import { useForm } from "@inertiajs/react";
 import { useRef } from "react";
+
+import Button from "@/Components/Button";
+import Input from "@/Components/Input";
 
 export default function UpdatePasswordForm({ className = "" }) {
     const passwordInput = useRef();

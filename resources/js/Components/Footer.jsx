@@ -1,6 +1,7 @@
-import { Link } from "@inertiajs/react";
-import Logo from "@/Components/Logo";
 import { Icon } from "@iconify/react";
+import { Link } from "@inertiajs/react";
+
+import Logo from "@/Components/Logo";
 
 const FOOTER_LINKS = {
     Resources: [

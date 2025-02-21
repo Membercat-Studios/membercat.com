@@ -1,8 +1,9 @@
 import { Head } from "@inertiajs/react";
 import { useState, useEffect } from "react";
-import Navbar from "@/Components/Navbar/Navbar";
+
 import Button from "@/Components/Button";
 import Footer from "@/Components/Footer";
+import Navbar from "@/Components/Navbar/Navbar";
 
 export default function Welcome({
     auth,

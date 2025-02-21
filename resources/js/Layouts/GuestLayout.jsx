@@ -1,6 +1,7 @@
-import Logo from "@/Components/Logo";
-import { Link } from "@inertiajs/react";
 import { Icon } from "@iconify/react";
+import { Link } from "@inertiajs/react";
+
+import Logo from "@/Components/Logo";
 
 export default function GuestLayout({ children }) {
     const socialLinks = [

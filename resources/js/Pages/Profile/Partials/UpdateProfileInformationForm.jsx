@@ -1,6 +1,7 @@
-import Input from "@/Components/Input";
-import Button from "@/Components/Button";
 import { Link, useForm, usePage } from "@inertiajs/react";
+
+import Button from "@/Components/Button";
+import Input from "@/Components/Input";
 
 export default function UpdateProfileInformation({
     mustVerifyEmail,

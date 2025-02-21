@@ -1,5 +1,6 @@
 import { Head } from "@inertiajs/react";
 import { useState } from "react";
+
 import Sidebar from "@/Components/Sidebar/Sidebar";
 import SidebarLink from "@/Components/Sidebar/SidebarLink";
 

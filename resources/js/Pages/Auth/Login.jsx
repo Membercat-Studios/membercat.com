@@ -1,8 +1,10 @@
+import { Head, Link, useForm } from "@inertiajs/react";
+
+import Button from "@/Components/Button";
 import Checkbox from "@/Components/Checkbox";
 import Input from "@/Components/Input";
-import Button from "@/Components/Button";
 import GuestLayout from "@/Layouts/GuestLayout";
-import { Head, Link, useForm } from "@inertiajs/react";
+
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
