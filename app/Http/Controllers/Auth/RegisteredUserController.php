@@ -40,6 +40,15 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'user',
+            'status' => 'offline',
+            'last_login' => json_encode([
+                'time' => now()->toDateTimeString(),
+                'ip' => $request->ip(),
+                'user_agent' => $request->header('User-Agent'),
+            ]),
+            'is_banned' => false,
+            'public_profile' => false,
         ]);
 
         event(new Registered($user));

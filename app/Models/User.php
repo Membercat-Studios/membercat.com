@@ -22,6 +22,10 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'is_banned',
+        'status',
+        'last_login',
+        'public_profile',
     ];
 
     /**
@@ -35,24 +39,26 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'is_banned' => 'boolean',
+        'public_profile' => 'boolean',
+    ];
 
-    // Add these constants for role management
     const ROLE_USER = 'user';
     const ROLE_ADMIN = 'admin';
     const ROLE_MOD = 'mod';
 
-    // Add these helper methods
+    const STATUS_ONLINE = 'online';
+    const STATUS_IDLE = 'idle';
+    const STATUS_DND = 'do not disturb';
+    const STATUS_OFFLINE = 'offline';
+
     public function isAdmin(): bool
     {
         return $this->role === self::ROLE_ADMIN;

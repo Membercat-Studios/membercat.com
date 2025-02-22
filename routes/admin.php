@@ -9,6 +9,10 @@ Route::prefix('admin')->middleware(['web', 'auth', AdminMiddleware::class])->gro
     Route::get('/dashboard', function () {
         return Inertia::render('Admin/Dashboard');
     })->name('admin.dashboard');
+   
+    Route::get('/settings', function () {
+        return Inertia::render('Admin/Settings');
+    })->name('admin.settings');
     
     Route::get('/users', [UsersController::class, 'index'])->name('admin.users');
     Route::get('/users/create', [UsersController::class, 'create'])->name('admin.users.create');

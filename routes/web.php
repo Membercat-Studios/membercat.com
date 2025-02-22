@@ -16,7 +16,10 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile/edit/information', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile/edit/security', [ProfileController::class, 'security'])->name('profile.security');
+    Route::get('/profile/edit/privacy', [ProfileController::class, 'privacy'])->name('profile.privacy');
+    Route::get('/profile/edit/preferences', [ProfileController::class, 'preferences'])->name('profile.preferences');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });

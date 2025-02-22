@@ -55,8 +55,8 @@ export default function Dashboard() {
                             Admin Dashboard
                         </h1>
                         <p className="mt-2 text-zinc-400">
-                            Welcome to the admin dashboard. Here's what's
-                            happening with your site.
+                            Welcome to the admin dashboard. Here's what's going
+                            on with Membercat Studios.
                         </p>
                     </div>
 

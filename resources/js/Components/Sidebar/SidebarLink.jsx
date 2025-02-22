@@ -8,44 +8,34 @@ export default function SidebarLink({
     icon,
     children,
     active = false,
-    external = false,
     method = "get",
-    loading = false,
-    onClick,
-    className,
+    className = "",
 }) {
     const { expanded } = useContext(SidebarContext);
-    const Component = external ? "a" : Link;
-    const externalProps = external
-        ? { target: "_blank", rel: "noopener noreferrer" }
-        : {};
 
     return (
-        <Component
+        <Link
             href={href}
             method={method}
-            {...externalProps}
-            onClick={onClick}
             className={`
-                group flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium
-                transition-all duration-150
-                ${className} 
+                flex items-center rounded px-3 py-2 text-sm
+                ${!expanded && "justify-center px-2"}
                 ${
                     active
-                        ? "bg-primary/10 text-primary"
-                        : "text-zinc-400 hover:bg-zinc-900/50 hover:text-white"
+                        ? "bg-zinc-800 text-white"
+                        : "text-zinc-400 hover:bg-zinc-900 hover:text-white"
                 }
-                ${loading ? "opacity-50 cursor-wait" : ""}
+                ${className}
             `}
+            title={!expanded ? children : undefined}
         >
-            {icon && (
-                <i
-                    className={`${loading ? "fas fa-spinner" : icon} ${
-                        expanded ? "text-lg" : "text-xl"
-                    } ${loading ? "fa-spin" : ""}`}
-                />
-            )}
-            {expanded && <span>{children}</span>}
-        </Component>
+            <i
+                className={`
+                    ${icon} 
+                    ${expanded ? "mr-3 text-base" : "text-lg"}
+                `}
+            />
+            {expanded && children}
+        </Link>
     );
 }
