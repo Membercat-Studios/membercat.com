@@ -5,7 +5,7 @@ import SidebarLink from "@/Components/Sidebar/SidebarLink";
 
 export default function AdminLayout({ children, title }) {
     return (
-        <div className="flex h-screen bg-zinc-950">
+        <div className="flex h-screen bg-zinc-950 scrollbar">
             <Sidebar>
                 <SidebarLink
                     href={route("admin.dashboard")}

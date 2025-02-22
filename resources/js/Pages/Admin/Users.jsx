@@ -1,4 +1,4 @@
-import { router } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 import Button from "@/Components/Button";
@@ -6,6 +6,7 @@ import Input from "@/Components/Input";
 import AdminLayout from "@/Layouts/AdminLayout";
 
 export default function Users({ users }) {
+    const { auth } = usePage().props;
     const [search, setSearch] = useState("");
     const [role, setRole] = useState("all");
 
@@ -32,6 +33,10 @@ export default function Users({ users }) {
             default:
                 return "bg-blue-500/10 text-blue-500";
         }
+    };
+
+    const canDeleteUser = (user) => {
+        return user.id !== auth.user.id && user.role !== "admin";
     };
 
     return (
@@ -134,10 +139,14 @@ export default function Users({ users }) {
                                     <td className="whitespace-nowrap flex gap-2 px-6 py-4">
                                         <Button
                                             className="w-8 h-8"
-                                            href={route(
-                                                "admin.users.edit",
-                                                user.id
-                                            )}
+                                            onClick={() =>
+                                                router.get(
+                                                    route(
+                                                        "admin.users.edit",
+                                                        user.id
+                                                    )
+                                                )
+                                            }
                                         >
                                             <i className="fas fa-edit"></i>
                                         </Button>
@@ -145,6 +154,12 @@ export default function Users({ users }) {
                                             className="w-8 h-8 !bg-red-500 !text-white"
                                             onClick={() =>
                                                 handleDelete(user.id)
+                                            }
+                                            disabled={!canDeleteUser(user)}
+                                            title={
+                                                !canDeleteUser(user)
+                                                    ? "Cannot delete admin accounts or your own account"
+                                                    : "Delete user"
                                             }
                                         >
                                             <i className="fas fa-trash"></i>

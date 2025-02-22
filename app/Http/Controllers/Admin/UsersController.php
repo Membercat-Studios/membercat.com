@@ -61,6 +61,8 @@ class UsersController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
                 'role' => $user->role,
+                'status' => $user->status,
+                'public_profile' => $user->public_profile,
             ],
         ]);
     }
@@ -72,11 +74,15 @@ class UsersController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'role' => 'required|string|in:admin,mod,user',
             'password' => $request->password ? ['confirmed', Rules\Password::defaults()] : '',
+            'status' => 'required|string|in:online,idle,do not disturb,offline',
+            'public_profile' => 'boolean',
         ]);
 
         $user->name = $request->name;
         $user->email = $request->email;
         $user->role = $request->role;
+        $user->status = $request->status;
+        $user->public_profile = $request->public_profile;
 
         if ($request->password) {
             $user->password = Hash::make($request->password);
@@ -84,11 +90,20 @@ class UsersController extends Controller
 
         $user->save();
 
-        return redirect()->route('admin.users')->with('success', 'User updated successfully.');
+        return back()->with('success', 'User updated successfully.');
     }
 
     public function destroy(User $user)
     {
+        // Prevent deleting self or other admins
+        if ($user->id === auth()->id()) {
+            return redirect()->route('admin.users')->with('error', 'You cannot delete your own account.');
+        }
+
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.users')->with('error', 'Administrator accounts cannot be deleted.');
+        }
+
         $user->delete();
         return redirect()->route('admin.users')->with('success', 'User deleted successfully.');
     }
