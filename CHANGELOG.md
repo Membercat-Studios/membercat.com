@@ -11,7 +11,7 @@ Changelog information for membercat.com. All changes from `0.0.1-Alpha+1` and ab
 -   Created Project and Team controllers for Modrinth API
 -   Added caching to Modrinth API controllers
 
-## 0.1.0-Alpha+2 (2025-02-XX)
+## 0.1.0-Alpha+2 (2025-02-23)
 
 -   Refactor Profiles
     -   Removed status settings
