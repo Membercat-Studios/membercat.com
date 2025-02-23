@@ -39,7 +39,7 @@ Before you begin, ensure you have the following installed:
 -   Node.js (v18 or higher)
 -   PHP (v8.1 or higher)
 -   Composer
--   Web Server (Apache, Nginx, etc.)
+-   Web Server (Apache, Nginx)
 
 ## 🚦 Getting Started
 
