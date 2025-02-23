@@ -7,7 +7,7 @@
 A high-quality website built for Membercat Studios, providing innovative Minecraft experiences and developer tools.
 
 [![Discord](https://img.shields.io/discord/748158402659745904?color=5865F2&label=Discord&logo=discord&logoColor=white)](https://discord.gg/membercat)
-[![GitHub License](https://img.shields.io/github/license/Membercat-Studios/membercat.com?color=blue)](LICENSE)
+[![License](https://img.shields.io/badge/License-Proprietary-red.svg)](LICENSE)
 
 </div>
 
@@ -133,9 +133,20 @@ We welcome contributions from the community! Here's how you can help:
 php artisan test
 ```
 
+or Node.js testing:
+
+```sh
+npm run test
+```
+
 ## 📝 License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is proprietary software. All rights reserved by Membercat Studios.
+
+-   Private use is permitted
+-   Contributions via pull requests are welcome
+-   Public use, hosting, or distribution requires explicit permission
+-   See the [LICENSE](LICENSE) file for details
 
 ## ⭐ Acknowledgements
 
