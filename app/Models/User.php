@@ -25,7 +25,6 @@ class User extends Authenticatable
         'is_banned',
         'status',
         'last_login',
-        'public_profile',
     ];
 
     /**
@@ -47,7 +46,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'is_banned' => 'boolean',
-        'public_profile' => 'boolean',
     ];
 
     const ROLE_USER = 'user';

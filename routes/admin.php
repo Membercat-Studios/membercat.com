@@ -22,10 +22,6 @@ Route::prefix('admin')->middleware(['web', 'auth', AdminMiddleware::class])->gro
     Route::delete('/users/{user}', [UsersController::class, 'destroy'])->name('admin.users.destroy');
 });
 
-Route::prefix('mod')->middleware([ModMiddleware::class])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Mod/Dashboard');
-    })->name('mod.dashboard');
-});
+
 
 
