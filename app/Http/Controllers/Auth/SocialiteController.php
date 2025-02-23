@@ -33,6 +33,10 @@ class SocialiteController extends Controller
                     'discord_id' => $discord->id,
                     'discord_token' => $discord->token,
                     'discord_refresh_token' => $discord->refreshToken,
+                    'discord_avatar' => $discord->avatar,
+                    'use_discord_avatar' => true,
+                    'use_github_avatar' => false,
+                    'use_gravatar' => false,
                 ]
             );
 
@@ -57,6 +61,9 @@ class SocialiteController extends Controller
                     'password' => bcrypt(Str::random(24)),
                     'github_id' => $github->id,
                     'github_token' => $github->token,
+                    'use_github_avatar' => true,
+                    'use_discord_avatar' => false,
+                    'use_gravatar' => false,
                 ]
             );
 

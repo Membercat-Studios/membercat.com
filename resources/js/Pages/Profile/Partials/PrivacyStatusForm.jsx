@@ -1,7 +1,7 @@
 import { useForm } from "@inertiajs/react";
 
 export default function PrivacyStatusForm({ className = "", initialStatus }) {
-    const { data, setData, patch, processing } = useForm({
+    const { data, setData, patch, processing, recentlySuccessful } = useForm({
         public_profile: initialStatus,
     });
 
@@ -9,7 +9,7 @@ export default function PrivacyStatusForm({ className = "", initialStatus }) {
         const newStatus = e.target.checked;
         setData("public_profile", newStatus);
 
-        patch(route("profile.update"), {
+        patch(route("profile.privacy.update"), {
             preserveScroll: true,
             data: { public_profile: newStatus },
         });
@@ -43,6 +43,12 @@ export default function PrivacyStatusForm({ className = "", initialStatus }) {
                     Public Profile
                 </label>
             </div>
+
+            {recentlySuccessful && (
+                <p className="text-sm text-green-500">
+                    Settings saved successfully.
+                </p>
+            )}
         </section>
     );
 }

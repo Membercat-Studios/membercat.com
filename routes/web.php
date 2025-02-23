@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\ProfilePhotoController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -15,13 +16,19 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile/edit/information', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::get('/profile/edit/security', [ProfileController::class, 'security'])->name('profile.security');
-    Route::get('/profile/edit/privacy', [ProfileController::class, 'privacy'])->name('profile.privacy');
-    Route::get('/profile/edit/preferences', [ProfileController::class, 'preferences'])->name('profile.preferences');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Profile Routes
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile/security', [ProfileController::class, 'security'])->name('profile.security');
+    Route::get('/profile/privacy', [ProfileController::class, 'privacy'])->name('profile.privacy');
+    Route::get('/profile/preferences', [ProfileController::class, 'preferences'])->name('profile.preferences');
+    
+    // Profile Updates
+    Route::post('/profile/update', [ProfileController::class, 'updateAll'])->name('profile.update.all');
+    Route::patch('/profile/privacy', [ProfileController::class, 'updatePrivacy'])->name('profile.privacy.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/profile/photo', [ProfilePhotoController::class, 'update'])
+        ->name('profile.photo.update');
 });
 
 Route::get('/projects', function () {

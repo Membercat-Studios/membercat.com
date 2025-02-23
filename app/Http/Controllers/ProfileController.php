@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Validation\Rule;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
@@ -25,38 +27,111 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update the user's profile information.
+     * Display the security settings page.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function security(): Response
     {
-        $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
-
-        if ($request->has('public_profile')) {
-            $request->user()->public_profile = $request->boolean('public_profile');
-        }
-
-        $request->user()->save();
-
-        return back();
+        return Inertia::render('Profile/Security');
     }
 
     /**
-     * Update the user's status.
+     * Display the privacy settings page.
      */
-    public function updateStatus(Request $request): RedirectResponse
+    public function privacy(): Response
+    {
+        return Inertia::render('Profile/Privacy');
+    }
+
+    /**
+     * Display the preferences page.
+     */
+    public function preferences(): Response
+    {
+        return Inertia::render('Profile/Preferences');
+    }
+
+    /**
+     * Update the user's profile information.
+     */
+    public function updateAll(Request $request): RedirectResponse
     {
         $request->validate([
-            'status' => ['required', 'string', 'in:online,idle,do not disturb,offline'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique(User::class)->ignore($request->user()->id)],
+            'photo' => ['nullable', 'image', 'max:1024'],
+            'avatar_type' => ['required', 'string', 'in:upload,discord,github,gravatar'],
+            'status' => ['nullable', 'string', 'in:online,idle,do not disturb,offline'],
         ]);
 
-        $request->user()->status = $request->input('status');
-        $request->user()->save();
+        $user = $request->user();
 
-        return Redirect::route('profile.edit');
+        // Update basic info
+        if ($request->email !== $user->email) {
+            $user->email_verified_at = null;
+        }
+        
+        $user->fill($request->only(['name', 'email', 'status']));
+
+        // Handle avatar update
+        switch ($request->avatar_type) {
+            case 'upload':
+                if ($request->hasFile('photo')) {
+                    $user->updateProfilePhoto($request->file('photo'));
+                }
+                $user->forceFill([
+                    'use_discord_avatar' => false,
+                    'use_github_avatar' => false,
+                    'use_gravatar' => false,
+                ]);
+                break;
+            
+            case 'discord':
+                $user->forceFill([
+                    'use_discord_avatar' => true,
+                    'use_github_avatar' => false,
+                    'use_gravatar' => false,
+                    'profile_photo_path' => null,
+                ]);
+                break;
+            
+            case 'github':
+                $user->forceFill([
+                    'use_github_avatar' => true,
+                    'use_discord_avatar' => false,
+                    'use_gravatar' => false,
+                    'profile_photo_path' => null,
+                ]);
+                break;
+            
+            case 'gravatar':
+                $user->forceFill([
+                    'use_gravatar' => true,
+                    'use_discord_avatar' => false,
+                    'use_github_avatar' => false,
+                    'profile_photo_path' => null,
+                ]);
+                break;
+        }
+
+        $user->save();
+
+        return back()->with('status', 'Profile updated successfully');
+    }
+
+    /**
+     * Update privacy settings.
+     */
+    public function updatePrivacy(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'public_profile' => ['required', 'boolean'],
+        ]);
+
+        $request->user()->forceFill([
+            'public_profile' => $request->public_profile,
+        ])->save();
+
+        return back()->with('status', 'Privacy settings updated successfully');
     }
 
     /**
@@ -78,20 +153,5 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
-    }
-
-    public function security(Request $request): Response
-    {
-        return Inertia::render('Profile/Security');
-    }
-
-    public function privacy(Request $request): Response
-    {
-        return Inertia::render('Profile/Privacy');
-    }
-
-    public function preferences(Request $request): Response
-    {
-        return Inertia::render('Profile/Preferences');
     }
 }

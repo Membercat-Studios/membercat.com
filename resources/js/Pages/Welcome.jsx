@@ -5,13 +5,7 @@ import Button from "@/Components/Button";
 import Footer from "@/Components/Footer";
 import Navbar from "@/Components/Navbar/Navbar";
 
-export default function Welcome({
-    auth,
-    canLogin,
-    canRegister,
-    laravelVersion,
-    phpVersion,
-}) {
+export default function Welcome({ auth }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [topProjects, setTopProjects] = useState([]);

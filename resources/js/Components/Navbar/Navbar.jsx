@@ -1,7 +1,7 @@
 import { Link, usePage } from "@inertiajs/react";
 import { useState, useEffect, useRef } from "react";
 
-import Gravatar from "@/Components/Gravatar";
+import Avatar from "@/Components/Avatar";
 import Logo from "@/Components/Logo";
 
 const NAV_LINKS = [
@@ -117,8 +117,8 @@ export default function Navbar() {
                                     }
                                     className="flex items-center space-x-3 rounded-lg border border-zinc-700 px-3 py-2 text-sm hover:bg-zinc-800/50 transition-all duration-200"
                                 >
-                                    <Gravatar
-                                        email={auth.user.email}
+                                    <Avatar
+                                        user={auth.user}
                                         size={24}
                                         className="h-6 w-6 rounded-full border-2 border-primary/20 transition-all duration-300 hover:border-primary/50"
                                     />
