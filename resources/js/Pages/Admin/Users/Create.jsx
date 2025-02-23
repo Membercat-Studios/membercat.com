@@ -64,15 +64,17 @@ export default function Create() {
                     <label className="block text-sm font-medium text-white">
                         Role
                     </label>
-                    <select
+                    <Input
+                        type="select"
+                        label="Role"
                         value={data.role}
                         onChange={(e) => setData("role", e.target.value)}
-                        className="mt-1.5 w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-white focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                    >
-                        <option value="user">User</option>
-                        <option value="mod">Moderator</option>
-                        <option value="admin">Administrator</option>
-                    </select>
+                        options={[
+                            { value: "user", label: "User" },
+                            { value: "mod", label: "Moderator" },
+                            { value: "admin", label: "Administrator" },
+                        ]}
+                    />
                 </div>
 
                 <div className="flex items-center gap-4">

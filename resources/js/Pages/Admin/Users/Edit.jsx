@@ -1,14 +1,13 @@
-import { useForm, usePage } from "@inertiajs/react";
+import { useForm, usePage, router } from "@inertiajs/react";
 import { useState } from "react";
 
 import Button from "@/Components/Button";
 import Input from "@/Components/Input";
 import AdminLayout from "@/Layouts/AdminLayout";
 import Gravatar from "@/Components/Gravatar";
-import Toast from "@/Components/Toast";
 
 export default function Edit({ user }) {
-    const [showToast, setShowToast] = useState(false);
+    const [showSaved, setShowSaved] = useState(false);
     const { data, setData, put, processing, errors } = useForm({
         name: user.name,
         email: user.email,
@@ -25,7 +24,8 @@ export default function Edit({ user }) {
             preserveScroll: true,
             preserveState: true,
             onSuccess: () => {
-                setShowToast(true);
+                setShowSaved(true);
+                setTimeout(() => setShowSaved(false), 3000);
             },
         });
     };
@@ -45,15 +45,7 @@ export default function Edit({ user }) {
 
     return (
         <AdminLayout title="Edit User">
-            <Toast
-                show={showToast}
-                message="User updated successfully"
-                type="success"
-                onClose={() => setShowToast(false)}
-            />
-
-            <div className="space-y-6">
-                {/* Profile Header */}
+            <div className="space-y-6 mt-4">
                 <div className="bg-zinc-900/50 rounded-xl border border-zinc-800 p-6">
                     <div className="flex items-center gap-6">
                         <div className="w-24 h-24 rounded-full bg-zinc-800 border-4 border-primary overflow-hidden">
@@ -90,7 +82,6 @@ export default function Edit({ user }) {
 
                 <form onSubmit={submit}>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        {/* Basic Information */}
                         <div className="bg-zinc-900/50 rounded-xl border border-zinc-800 p-6">
                             <h3 className="text-lg font-medium text-white mb-4">
                                 Basic Information
@@ -118,7 +109,6 @@ export default function Edit({ user }) {
                             </div>
                         </div>
 
-                        {/* Security */}
                         <div className="bg-zinc-900/50 rounded-xl border border-zinc-800 p-6">
                             <h3 className="text-lg font-medium text-white mb-4">
                                 Security
@@ -149,82 +139,69 @@ export default function Edit({ user }) {
                             </div>
                         </div>
 
-                        {/* Permissions */}
                         <div className="bg-zinc-900/50 rounded-xl border border-zinc-800 p-6">
                             <h3 className="text-lg font-medium text-white mb-4">
                                 Permissions
                             </h3>
                             <div className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-white mb-1">
-                                        Role
-                                    </label>
-                                    <select
-                                        value={data.role}
-                                        onChange={(e) =>
-                                            setData("role", e.target.value)
-                                        }
-                                        className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-white focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                                    >
-                                        <option value="user">User</option>
-                                        <option value="mod">Moderator</option>
-                                        <option value="admin">
-                                            Administrator
-                                        </option>
-                                    </select>
-                                </div>
+                                <Input
+                                    type="select"
+                                    label="Role"
+                                    value={data.role}
+                                    onChange={(e) =>
+                                        setData("role", e.target.value)
+                                    }
+                                    options={[
+                                        { value: "user", label: "User" },
+                                        { value: "mod", label: "Moderator" },
+                                        {
+                                            value: "admin",
+                                            label: "Administrator",
+                                        },
+                                    ]}
+                                />
 
-                                <div className="flex items-center gap-3">
-                                    <input
-                                        type="checkbox"
-                                        id="public_profile"
-                                        checked={data.public_profile}
-                                        onChange={(e) =>
-                                            setData(
-                                                "public_profile",
-                                                e.target.checked
-                                            )
-                                        }
-                                        className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 text-primary focus:ring-primary focus:ring-offset-zinc-900"
-                                    />
-                                    <label
-                                        htmlFor="public_profile"
-                                        className="text-sm text-white"
-                                    >
-                                        Public Profile
-                                    </label>
-                                </div>
+                                <Input
+                                    type="checkbox"
+                                    id="public_profile"
+                                    label="Public Profile"
+                                    checked={data.public_profile}
+                                    onChange={(e) =>
+                                        setData(
+                                            "public_profile",
+                                            e.target.checked
+                                        )
+                                    }
+                                />
                             </div>
                         </div>
 
-                        {/* Status */}
                         <div className="bg-zinc-900/50 rounded-xl border border-zinc-800 p-6">
                             <h3 className="text-lg font-medium text-white mb-4">
                                 Status
                             </h3>
                             <div>
-                                <label className="block text-sm font-medium text-white mb-1">
-                                    Current Status
-                                </label>
-                                <select
+                                <Input
+                                    type="select"
+                                    label="Current Status"
                                     value={data.status}
                                     onChange={(e) =>
                                         setData("status", e.target.value)
                                     }
-                                    className="w-full rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-white focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                                >
-                                    <option value="online">Online</option>
-                                    <option value="idle">Idle</option>
-                                    <option value="do not disturb">
-                                        Do Not Disturb
-                                    </option>
-                                    <option value="offline">Offline</option>
-                                </select>
+                                    options={[
+                                        { value: "online", label: "Online" },
+                                        { value: "idle", label: "Idle" },
+                                        {
+                                            value: "do not disturb",
+                                            label: "Do Not Disturb",
+                                        },
+                                        { value: "offline", label: "Offline" },
+                                    ]}
+                                />
                             </div>
                         </div>
                     </div>
 
-                    {/* Action Buttons */}
                     <div className="mt-6 flex items-center gap-4">
                         <Button
                             appearance="success"
@@ -234,6 +211,10 @@ export default function Edit({ user }) {
                         >
                             Save Changes
                         </Button>
+
+                        {showSaved && (
+                            <div className="text-green-500 text-sm">Saved.</div>
+                        )}
 
                         <Button
                             appearance="text"
