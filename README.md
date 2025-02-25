@@ -40,6 +40,9 @@ Before you begin, ensure you have the following installed:
 -   PHP (v8.1 or higher)
 -   Composer
 -   Web Server (Apache, Nginx)
+-   Database (SQLite, MySQL, PostgreSQL, etc.)
+
+If you are using MySQL or PostgreSQL, make sure to set up the proper variables in your `.env` file.
 
 ## 🚦 Getting Started
 

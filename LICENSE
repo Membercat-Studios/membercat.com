@@ -4,15 +4,22 @@ All rights reserved.
 
 PERMISSIONS:
 
-1. Private Use: Permission is granted for private use of this software and associated documentation files (the "Software").
-2. Contributions: Permission is granted to fork, modify, and submit pull requests to the official repository.
+1. **Private Use**: Individuals are granted permission to use this software and its associated documentation files (the "Software") for personal, non-commercial purposes. This includes installation, execution, and modification for personal use only.
+
+2. **Contributions**: Users are encouraged to contribute to the development of the Software by forking the official repository, making modifications, and submitting pull requests. Contributions should adhere to the project's contribution guidelines and coding standards.
 
 RESTRICTIONS:
 
-1. Public Use: Any public use, hosting, or deployment of the Software requires explicit written permission from Membercat Studios.
-2. Distribution: Redistribution of the Software or any derivative works in any form is prohibited without explicit written permission from Membercat Studios.
-3. Commercial Use: Using the Software for commercial purposes requires explicit written permission from Membercat Studios.
+1. **Public Use**: Any form of public use, including but not limited to hosting, deployment, or demonstration of the Software, requires explicit written consent from Membercat Studios. This ensures that the Software is used in a manner consistent with the values and standards of Membercat Studios.
 
-Contributors grant Membercat Studios a perpetual, worldwide, non-exclusive, royalty-free license to use, copy, modify, and distribute their contributed code.
+2. **Distribution**: Redistribution of the Software, whether in its original form or as a derivative work, is strictly prohibited without obtaining explicit written permission from Membercat Studios. This includes sharing the Software on public platforms or with third parties.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+3. **Commercial Use**: Utilizing the Software for commercial purposes, including but not limited to selling, licensing, or offering services based on the Software, is forbidden without explicit written authorization from Membercat Studios. This ensures that any commercial exploitation aligns with the interests of Membercat Studios.
+
+CONTRIBUTOR LICENSE:
+
+Contributors to the Software grant Membercat Studios a perpetual, worldwide, non-exclusive, royalty-free license to use, copy, modify, and distribute their contributed code. This license allows Membercat Studios to incorporate contributions into the Software and distribute it under the terms of this license.
+
+DISCLAIMER:
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. USERS ASSUME ALL RISKS ASSOCIATED WITH THE USE OF THE SOFTWARE, INCLUDING BUT NOT LIMITED TO DATA LOSS, SYSTEM DAMAGE, OR OTHER ISSUES ARISING FROM THE USE OF THE SOFTWARE.
