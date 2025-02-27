@@ -64,4 +64,13 @@ class ProjectController extends Controller
 
         return $projects;
     }
+
+    public function top3Projects()
+    {
+        $projects = $this->fetchRawData();
+
+        $projects = collect($projects)->sortByDesc('downloads')->take(3)->toArray();
+
+        return $projects;
+    }
 }

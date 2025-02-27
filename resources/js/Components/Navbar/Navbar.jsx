@@ -45,11 +45,6 @@ export default function Navbar() {
 
     const userMenuItems = [
         {
-            label: "Profile",
-            icon: "fa-user",
-            href: route("profile.edit"),
-        },
-        {
             label: "Settings",
             icon: "fa-gear",
             href: route("settings"),

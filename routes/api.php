@@ -13,5 +13,3 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
-
-Route::get('/projects/featured', [ProjectController::class, 'featured']); 

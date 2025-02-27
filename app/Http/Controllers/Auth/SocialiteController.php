@@ -7,72 +7,117 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Str;
+use Exception;
+use Illuminate\Support\Facades\Log;
+use GuzzleHttp\Exception\ClientException;
 
 class SocialiteController extends Controller
 {
     public function discordRedirect()
     {
-        return Socialite::driver('discord')->redirect();
+        try {
+            return Socialite::driver('discord')
+                ->setScopes(['identify', 'email'])
+                ->redirect();
+        } catch (Exception $e) {
+            Log::error('Discord redirect failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return redirect('/login')
+                ->with('error', 'Could not connect to Discord. Please try again later.');
+        }
     }
 
     public function githubRedirect()
     {
-        return Socialite::driver('github')->redirect();
+        try {
+            return Socialite::driver('github')->redirect();
+        } catch (Exception $e) {
+            Log::error('GitHub redirect failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return redirect('/login')
+                ->with('error', 'Could not connect to GitHub. Please try again later.');
+        }
     }
 
     public function discordCallback()
     {
-        try {
-            $discord = Socialite::driver('discord')->user();
+            $discordUser = Socialite::driver('discord')->user();
+            
+            $user = User::where('discord_id', $discordUser->id)
+                       ->orWhere('email', $discordUser->email)
+                       ->first();
 
-            $user = User::updateOrCreate(
-                ['email' => $discord->email],
-                [
-                    'name' => $discord->name ?? $discord->nickname,
+            if ($user) {
+                $user->update([
+                    'discord_id' => $discordUser->id,
+                    'discord_username' => $discordUser->nickname,
+                    'discord_token' => $discordUser->token,
+                    'discord_refresh_token' => $discordUser->refreshToken,
+                    'discord_avatar' => $discordUser->avatar,
+                    'name' => $discordUser->name ?? $discordUser->nickname,
+                    'email' => $discordUser->email,
+                ]);
+            } else {
+                $user = User::create([
+                    'name' => $discordUser->name ?? $discordUser->nickname,
+                    'email' => $discordUser->email,
                     'password' => bcrypt(Str::random(24)),
-                    'discord_id' => $discord->id,
-                    'discord_token' => $discord->token,
-                    'discord_refresh_token' => $discord->refreshToken,
-                    'discord_avatar' => $discord->avatar,
-                    'use_discord_avatar' => true,
-                    'use_github_avatar' => false,
-                    'use_gravatar' => false,
-                ]
-            );
+                    'discord_id' => $discordUser->id,
+                    'discord_username' => $discordUser->nickname,
+                    'discord_token' => $discordUser->token,
+                    'discord_refresh_token' => $discordUser->refreshToken,
+                    'discord_avatar' => $discordUser->avatar,
+                    'role' => 'user',
+                ]);
+            }
 
             Auth::login($user);
-
-            return redirect()->intended(route('home'));
-        } catch (\Exception $e) {
-            return redirect()->route('login')
-                ->withErrors(['error' => 'Failed to authenticate with Discord']);
-        }
+            
+            Log::info('Discord auth successful', ['user_id' => $user->id]);
+            
+            return redirect('/');
     }
 
     public function githubCallback()
     {
-        try {
-            $github = Socialite::driver('github')->user();
+            $githubUser = Socialite::driver('github')->user();
+            
+            $user = User::where('github_id', $githubUser->id)
+                       ->orWhere('email', $githubUser->email)
+                       ->first();
 
-            $user = User::updateOrCreate(
-                ['email' => $github->email],
-                [
-                    'name' => $github->name ?? $github->nickname,
+            if ($user) {
+                $user->update([
+                    'github_id' => $githubUser->id,
+                    'github_username' => $githubUser->nickname,
+                    'github_token' => $githubUser->token,
+                    'github_avatar' => $githubUser->avatar,
+                    'name' => $githubUser->name ?? $githubUser->nickname,
+                    'email' => $githubUser->email,
+                ]);
+            } else {
+                $user = User::create([
+                    'name' => $githubUser->name ?? $githubUser->nickname,
+                    'email' => $githubUser->email,
                     'password' => bcrypt(Str::random(24)),
-                    'github_id' => $github->id,
-                    'github_token' => $github->token,
-                    'use_github_avatar' => true,
-                    'use_discord_avatar' => false,
-                    'use_gravatar' => false,
-                ]
-            );
+                    'github_id' => $githubUser->id,
+                    'github_username' => $githubUser->nickname,
+                    'github_token' => $githubUser->token,
+                    'github_avatar' => $githubUser->avatar,
+                    'role' => 'user',
+                ]);
+            }
 
             Auth::login($user);
-
-            return redirect()->intended(route('home'));
-        } catch (\Exception $e) {
-            return redirect()->route('login')
-                ->withErrors(['error' => 'Failed to authenticate with GitHub']);
-        }
+            
+            Log::info('GitHub auth successful', ['user_id' => $user->id]);
+            
+            return redirect('/');
     }
 } 

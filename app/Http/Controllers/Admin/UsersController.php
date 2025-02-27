@@ -15,7 +15,17 @@ class UsersController extends Controller
     {
         return Inertia::render('Admin/Users', [
             'users' => User::query()
-                ->select('id', 'name', 'email', 'role', 'email_verified_at', 'created_at')
+                ->select(
+                    'id',
+                    'name',
+                    'email',
+                    'role',
+                    'created_at',
+                    'discord_id',
+                    'discord_username',
+                    'github_id',
+                    'github_username'
+                )
                 ->orderBy('created_at', 'desc')
                 ->get()
                 ->map(fn ($user) => [
@@ -23,79 +33,17 @@ class UsersController extends Controller
                     'name' => $user->name,
                     'email' => $user->email,
                     'role' => $user->role,
-                    'verified' => !is_null($user->email_verified_at),
+                    'discord_id' => $user->discord_id,
+                    'discord_username' => $user->discord_username,
+                    'github_id' => $user->github_id,
+                    'github_username' => $user->github_username,
                     'created_at' => $user->created_at->diffForHumans(),
                 ]),
         ]);
     }
 
-    public function create()
-    {
-        return Inertia::render('Admin/Users/Create');
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role' => 'required|string|in:admin,mod,user',
-        ]);
-
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
-        ]);
-
-        return redirect()->route('admin.users')->with('success', 'User created successfully.');
-    }
-
-    public function edit(User $user)
-    {
-        return Inertia::render('Admin/Users/Edit', [
-            'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'role' => $user->role,
-                'status' => $user->status,
-                'public_profile' => $user->public_profile,
-            ],
-        ]);
-    }
-
-    public function update(Request $request, User $user)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'role' => 'required|string|in:admin,mod,user',
-            'password' => $request->password ? ['confirmed', Rules\Password::defaults()] : '',
-            'status' => 'required|string|in:online,idle,do not disturb,offline',
-            'public_profile' => 'boolean',
-        ]);
-
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->role = $request->role;
-        $user->status = $request->status;
-        $user->public_profile = $request->public_profile;
-
-        if ($request->password) {
-            $user->password = Hash::make($request->password);
-        }
-
-        $user->save();
-
-        return back()->with('success', 'User updated successfully.');
-    }
-
     public function destroy(User $user)
     {
-        // Prevent deleting self or other admins
         if ($user->id === auth()->id()) {
             return redirect()->route('admin.users')->with('error', 'You cannot delete your own account.');
         }
@@ -106,5 +54,17 @@ class UsersController extends Controller
 
         $user->delete();
         return redirect()->route('admin.users')->with('success', 'User deleted successfully.');
+    }
+
+    public function makeAdmin(User $user)
+    {
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.users')->with('error', 'User is already an admin.');
+        }
+
+        $user->role = User::ROLE_ADMIN;
+        $user->save();
+
+        return redirect()->route('admin.users')->with('success', 'User has been made an admin.');
     }
 } 

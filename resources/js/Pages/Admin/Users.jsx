@@ -24,6 +24,12 @@ export default function Users({ users }) {
         }
     };
 
+    const handleMakeAdmin = (userId) => {
+        if (confirm("Are you sure you want to make this user an admin?")) {
+            router.post(route("admin.users.make-admin", userId));
+        }
+    };
+
     const getRoleBadgeClass = (role) => {
         switch (role) {
             case "admin":
@@ -66,11 +72,6 @@ export default function Users({ users }) {
                         <option value="user">Users</option>
                     </select>
                 </div>
-
-                <Button onClick={() => router.get(route("admin.users.create"))}>
-                    <i className="fas fa-plus mr-2" />
-                    Create User
-                </Button>
             </div>
 
             <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-900/50">
@@ -85,10 +86,10 @@ export default function Users({ users }) {
                                     Email
                                 </th>
                                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-400">
-                                    Role
+                                    Discord
                                 </th>
                                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-400">
-                                    Verified
+                                    Role
                                 </th>
                                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-400">
                                     Joined
@@ -112,6 +113,22 @@ export default function Users({ users }) {
                                         </div>
                                     </td>
                                     <td className="whitespace-nowrap px-6 py-4">
+                                        {user.discord_id ? (
+                                            <div className="text-sm text-zinc-400">
+                                                <div className="font-medium text-[#5865F2]">
+                                                    {user.discord_username}
+                                                </div>
+                                                <div className="text-xs">
+                                                    ID: {user.discord_id}
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="text-sm text-zinc-500 italic">
+                                                Not connected
+                                            </div>
+                                        )}
+                                    </td>
+                                    <td className="whitespace-nowrap px-6 py-4">
                                         <span
                                             className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${getRoleBadgeClass(
                                                 user.role
@@ -121,35 +138,22 @@ export default function Users({ users }) {
                                         </span>
                                     </td>
                                     <td className="whitespace-nowrap px-6 py-4">
-                                        {user.verified ? (
-                                            <span className="text-green-500">
-                                                <i className="fas fa-check" />
-                                            </span>
-                                        ) : (
-                                            <span className="text-red-500">
-                                                <i className="fas fa-times" />
-                                            </span>
-                                        )}
-                                    </td>
-                                    <td className="whitespace-nowrap px-6 py-4">
                                         <div className="text-sm text-zinc-400">
                                             {user.created_at}
                                         </div>
                                     </td>
                                     <td className="whitespace-nowrap flex gap-2 px-6 py-4">
-                                        <Button
-                                            className="w-8 h-8"
-                                            onClick={() =>
-                                                router.get(
-                                                    route(
-                                                        "admin.users.edit",
-                                                        user.id
-                                                    )
-                                                )
-                                            }
-                                        >
-                                            <i className="fas fa-edit"></i>
-                                        </Button>
+                                        {user.role !== "admin" && (
+                                            <Button
+                                                className="w-8 h-8 !bg-yellow-500 !text-white"
+                                                onClick={() =>
+                                                    handleMakeAdmin(user.id)
+                                                }
+                                                title="Make user an admin"
+                                            >
+                                                <i className="fas fa-shield"></i>
+                                            </Button>
+                                        )}
                                         <Button
                                             className="w-8 h-8 !bg-red-500 !text-white"
                                             onClick={() =>

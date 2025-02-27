@@ -20,6 +20,7 @@ Route::prefix('admin')->middleware(['web', 'auth', AdminMiddleware::class])->gro
     Route::get('/users/{user}/edit', [UsersController::class, 'edit'])->name('admin.users.edit');
     Route::put('/users/{user}', [UsersController::class, 'update'])->name('admin.users.update');
     Route::delete('/users/{user}', [UsersController::class, 'destroy'])->name('admin.users.destroy');
+    Route::post('/users/{user}/make-admin', [UsersController::class, 'makeAdmin'])->name('admin.users.make-admin');
 });
 
 

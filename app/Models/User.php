@@ -24,8 +24,17 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'is_banned',
         'status',
+        'is_banned',
+        'discord_id',
+        'discord_username',
+        'discord_token',
+        'discord_refresh_token',
+        'discord_avatar',
+        'github_id',
+        'github_username',
+        'github_token',
+        'github_avatar',
         'last_login',
     ];
 
@@ -37,6 +46,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'discord_token',
+        'discord_refresh_token',
+        'github_token',
     ];
 
     /**
@@ -48,18 +60,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'is_banned' => 'boolean',
+        'last_login' => 'datetime',
     ];
 
     const ROLE_USER = 'user';
     const ROLE_ADMIN = 'admin';
     const ROLE_MOD = 'mod';
-
-    const STATUS_ONLINE = 'online';
-    const STATUS_IDLE = 'idle';
-    const STATUS_DND = 'do not disturb';
-    const STATUS_OFFLINE = 'offline';
-
-    protected $appends = ['profile_photo_url'];
 
     public function isAdmin(): bool
     {
@@ -71,41 +77,15 @@ class User extends Authenticatable
         return $this->role === self::ROLE_MOD;
     }
 
-    public function getProfilePhotoUrlAttribute()
+    public function makeAdmin(string $email): bool
     {
-        if ($this->profile_photo_path) {
-            return Storage::url($this->profile_photo_path);
+        $user = User::where('email', $email)->first();
+        
+        if (!$user) {
+            return false;
         }
-
-        if ($this->discord_id && $this->use_discord_avatar) {
-            return "https://cdn.discordapp.com/avatars/{$this->discord_id}/{$this->discord_avatar}.png";
-        }
-
-        if ($this->github_id && $this->use_github_avatar) {
-            return "https://avatars.githubusercontent.com/u/{$this->github_id}";
-        }
-
-        if ($this->use_gravatar) {
-            $hash = md5(strtolower(trim($this->email)));
-            return "https://www.gravatar.com/avatar/{$hash}?d=mp";
-        }
-
-        return "https://ui-avatars.com/api/?name=" . urlencode($this->name) . "&color=7F9CF5&background=EBF4FF";
-    }
-
-    public function updateProfilePhoto($photo)
-    {
-        tap($this->profile_photo_path, function ($previous) use ($photo) {
-            $this->forceFill([
-                'profile_photo_path' => $photo->store('profile-photos', 'public'),
-                'use_discord_avatar' => false,
-                'use_github_avatar' => false,
-                'use_gravatar' => false,
-            ])->save();
-
-            if ($previous) {
-                Storage::disk('public')->delete($previous);
-            }
-        });
+        
+        $user->role = self::ROLE_ADMIN;
+        return $user->save();
     }
 }
