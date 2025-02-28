@@ -10,9 +10,6 @@ use App\Http\Controllers\ProfilePhotoController;
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
     ]);
 })->name('home');
 
@@ -47,3 +44,4 @@ Route::middleware('guest')->group(function () {
 require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';
 require __DIR__.'/mod.php';
+require __DIR__.'/modrinth.php';

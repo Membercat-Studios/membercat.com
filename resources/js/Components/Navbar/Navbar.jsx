@@ -79,7 +79,7 @@ export default function Navbar() {
     ];
 
     return (
-        <nav className="fixed left-0 right-0 top-4 z-[100]">
+        <nav className="fixed top-4 left-0 right-0 z-50">
             <div className="container mx-auto max-w-7xl px-4">
                 <div className="flex items-center justify-between rounded-xl border border-zinc-700 bg-zinc-900/60 px-6 py-3 shadow-lg backdrop-blur-md">
                     <div className="flex items-center space-x-8">

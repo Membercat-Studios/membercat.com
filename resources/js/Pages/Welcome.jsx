@@ -4,23 +4,28 @@ import { useState, useEffect } from "react";
 import Button from "@/Components/Button";
 import Footer from "@/Components/Footer";
 import Navbar from "@/Components/Navbar/Navbar";
+import Search from "@/Components/Search";
 
 export default function Welcome({ auth }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [topProjects, setTopProjects] = useState([]);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
 
     useEffect(() => {
         const fetchProjects = async () => {
             try {
                 setLoading(true);
-                // TODO: implement api calls
-                const response = await fetch("/api/projects/featured");
+                const response = await fetch(route("modrinth.top-projects"));
                 const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
                 setTopProjects(data);
-            } catch (err) {
-                console.error("Error fetching projects:", err);
-                setError(err.message);
+            } catch (error) {
+                setError(error.message);
             } finally {
                 setLoading(false);
             }
@@ -28,6 +33,15 @@ export default function Welcome({ auth }) {
 
         fetchProjects();
     }, []);
+
+    const formatDownloads = (downloads) => {
+        if (downloads >= 1000000) {
+            return `${(downloads / 1000000).toFixed(1)}M`;
+        } else if (downloads >= 1000) {
+            return `${(downloads / 1000).toFixed(1)}K`;
+        }
+        return downloads.toString();
+    };
 
     const scrollToProjects = () => {
         window.scrollTo({
@@ -78,16 +92,10 @@ export default function Welcome({ auth }) {
                                 </p>
                             </div>
 
-                            <div className="max-w-2xl mx-auto">
-                                <div className="relative">
-                                    <input
-                                        type="text"
-                                        placeholder="Search projects..."
-                                        className="w-full px-6 py-4 rounded-xl bg-white/5 border border-zinc-700 text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                                    />
-                                    <i className="fas fa-search absolute right-6 top-1/2 -translate-y-1/2 text-zinc-400" />
-                                </div>
-                            </div>
+                            <Search
+                                isOpen={isSearchOpen}
+                                setIsOpen={setIsSearchOpen}
+                            />
 
                             <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
                                 <Button
@@ -103,11 +111,10 @@ export default function Welcome({ auth }) {
                                 <Button
                                     appearance="text"
                                     size="lg"
-                                    onClick={() => {
-                                        window.location.href = "/projects";
-                                    }}
+                                    onClick={() => setIsSearchOpen(true)}
+                                    icon="fas fa-search"
                                 >
-                                    Get Started
+                                    Search Projects
                                 </Button>
                             </div>
                         </div>
@@ -135,7 +142,7 @@ export default function Welcome({ auth }) {
                 </section>
 
                 <section className="relative bg-black py-24">
-                    <div className="absolute inset-0 bg-gradient-to-b from-zinc-900/0 to-zinc-900/10" />
+                    <div className="absolute inset-0" />
 
                     {loading ? (
                         <div className="flex justify-center py-16">
@@ -143,7 +150,7 @@ export default function Welcome({ auth }) {
                         </div>
                     ) : error ? (
                         <div className="text-center text-red-500 py-16">
-                            Failed to load projects
+                            {error}
                         </div>
                     ) : (
                         <div className="container mx-auto px-4">
@@ -151,14 +158,87 @@ export default function Welcome({ auth }) {
                                 <h2 className="text-3xl font-bold text-white mb-8">
                                     Featured Projects
                                 </h2>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                     {topProjects.map((project) => (
-                                        <div
+                                        <a
+                                            href={`https://modrinth.com/project/${project.slug}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
                                             key={project.id}
-                                            className="rounded-xl bg-zinc-800 border border-zinc-700 p-6"
+                                            className="rounded-xl bg-zinc-900/50 h-full backdrop-blur-sm border border-zinc-800 p-8 hover:border-primary/50 transition-all duration-300 group hover:shadow-lg hover:shadow-primary/5"
                                         >
-                                            {/* TODO: add project card content */}
-                                        </div>
+                                            <div className="flex items-start gap-6">
+                                                {project.icon ? (
+                                                    <img
+                                                        src={project.icon}
+                                                        alt={project.name}
+                                                        className="w-20 h-20 rounded-xl object-cover shadow-lg group-hover:shadow-primary/10 transition-all duration-300"
+                                                    />
+                                                ) : (
+                                                    <div className="w-20 h-20 rounded-xl bg-zinc-800 flex items-center justify-center shadow-lg">
+                                                        <i className="fas fa-cube text-3xl text-zinc-500" />
+                                                    </div>
+                                                )}
+                                                <div className="flex-1 min-w-0">
+                                                    <h3 className="text-xl font-bold text-white group-hover:text-primary transition-colors truncate">
+                                                        {project.name}
+                                                    </h3>
+                                                    <p className="text-zinc-300 mt-2 line-clamp-2 text-sm leading-relaxed">
+                                                        {project.summary}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div className="mt-6 flex flex-wrap gap-2">
+                                                {project.categories
+                                                    .slice(0, 3)
+                                                    .map((category, index) => (
+                                                        <span
+                                                            key={index}
+                                                            className="px-3 py-1.5 rounded-full bg-zinc-800/50 border border-zinc-700/50 backdrop-blur-sm text-xs font-medium text-zinc-300"
+                                                        >
+                                                            {category
+                                                                .charAt(0)
+                                                                .toUpperCase() +
+                                                                category.slice(
+                                                                    1
+                                                                )}
+                                                        </span>
+                                                    ))}
+                                                {project.categories.length >
+                                                    3 && (
+                                                    <span className="px-3 py-1.5 rounded-full bg-zinc-800/50 border border-zinc-700/50 backdrop-blur-sm text-xs font-medium text-zinc-300">
+                                                        +
+                                                        {project.categories
+                                                            .length - 3}{" "}
+                                                        more
+                                                    </span>
+                                                )}
+                                            </div>
+
+                                            <div className="flex flex-wrap items-center gap-6 mt-6">
+                                                <div className="flex items-center gap-2 text-sm">
+                                                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                                                        <i className="fas fa-download text-primary" />
+                                                    </div>
+                                                    <span className="text-zinc-300">
+                                                        {formatDownloads(
+                                                            project.downloads
+                                                        )}
+                                                    </span>
+                                                </div>
+                                                <div className="flex items-center gap-2 text-sm">
+                                                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                                                        <i className="fas fa-code-branch text-primary" />
+                                                    </div>
+                                                    <span className="text-zinc-300">
+                                                        {project.versions
+                                                            ?.length || 0}{" "}
+                                                        versions
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </a>
                                     ))}
                                 </div>
                             </div>

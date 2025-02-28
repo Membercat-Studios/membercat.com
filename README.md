@@ -14,10 +14,9 @@ A high-quality website built for Membercat Studios, providing innovative Minecra
 ## 🚀 Features
 
 -   Modern and responsive design
--   User authentication and profiles
 -   Project showcase and discovery
--   Developer documentation
--   Community integration
+-   Developer documentation (coming soon)
+-   Community integration (planned for future)
 
 ## 🛠️ Tech Stack
 

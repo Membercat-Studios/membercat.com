@@ -36,3 +36,12 @@ Changelog information for membercat.com. All changes from `0.0.1-Alpha+1` and ab
 -   Removed ability to create new users and edit existing users from the admin panel.
 -   Added `makeAdmin` method to User model
 -   Replaced "Edit User" button with "Make Admin" button in admin users page. (Only visible to non-admin users.)
+
+## 0.1.0-Alpha+4 (2025-02-28)
+
+-   Refactored and optimized Modrinth API controllers
+-   Routes for Modrinth API controllers
+-   Added "Featured Projects" section to `Welcome.jsx` page
+-   Refactored `top3Projects()` method
+-   Created new `Search.jsx` component
+-   Welcome page improvements

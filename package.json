@@ -35,6 +35,8 @@
         "vite": "^6.1.1"
     },
     "dependencies": {
-        "md5": "^2.3.0"
+        "framer-motion": "^12.4.7",
+        "md5": "^2.3.0",
+        "use-debounce": "^10.0.4"
     }
 }
