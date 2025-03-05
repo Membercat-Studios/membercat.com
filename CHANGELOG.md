@@ -45,3 +45,12 @@ Changelog information for membercat.com. All changes from `0.0.1-Alpha+1` and ab
 -   Refactored `top3Projects()` method
 -   Created new `Search.jsx` component
 -   Welcome page improvements
+
+## 0.1.0-Alpha+5 (2025-03-05)
+
+-   Added documentation functions
+    -   DocsController handles markdown parsing and rendering
+    -   DocsSidebar component shows all files in the `resources/docs` directory.
+    -   DocsLayout component handles the layout of the documentation pages.
+
+**THESE FEATURES ARE STILL VERY UNSTABLE AND WILL LIKELY CHANGE IN THE FUTURE**

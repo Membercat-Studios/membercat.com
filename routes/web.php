@@ -29,6 +29,8 @@ Route::get('/settings', function () {
     return Inertia::render('Settings');
 })->name('settings');
 
+
+
 Route::middleware('guest')->group(function () {
     Route::get('auth/discord/redirect', [SocialiteController::class, 'discordRedirect'])
         ->name('discord.redirect');
@@ -45,3 +47,4 @@ require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';
 require __DIR__.'/mod.php';
 require __DIR__.'/modrinth.php';
+require __DIR__.'/docs.php';
