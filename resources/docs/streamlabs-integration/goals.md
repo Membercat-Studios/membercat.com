@@ -25,9 +25,9 @@ goal_types:
     commands:
     - 'execute at {player} run summon tnt'
 ```
-Let's take a look at this example goal type. The `add_amount` property specifies how much we want to add to the goal every time it gets triggered, this could be as simple as a "1" to add 1 to the goal each time, or in this case, we're using the `{amount}` placeholder to add the amount of bits donated. Note that you can also use **any math expression** in here, just like the [execution count](https://github.com/Membercat-Studios/Streamlabs-Integration/wiki/Commands#execution-count) in commands.
+Let's take a look at this example goal type. The `add_amount` property specifies how much we want to add to the goal every time it gets triggered, this could be as simple as a "1" to add 1 to the goal each time, or in this case, we're using the `{amount}` placeholder to add the amount of bits donated. Note that you can also use **any math expression** in here, just like the [execution count](./commands#execution-count) in commands.
 
-The `conditions` let you specify when something will be added to the goal, those will be checked on every Streamlabs event. To filter out only twitch bits events, we're using the **_type** [internal placeholder](https://github.com/Membercat-Studios/Streamlabs-Integration/wiki/Event-Types-&-Placeholders#placeholders-for-every-event-type).
+The `conditions` let you specify when something will be added to the goal, those will be checked on every Streamlabs event. To filter out only twitch bits events, we're using the **_type** [internal placeholder](./event-types#placeholders-for-every-event-type).
 
 At last, donation goals also support messages, commands and rate limiters (like any action), which will be run when the goal is reached.
 To start a goal, run `/streamlabs goal start {goal_type} {amount}` with `goal_type` being the goal type you want to use and `amount` being the actual amount you want to reach (for example 2000 to set a goal at 2000 bits)!

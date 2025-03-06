@@ -7,7 +7,7 @@ slug: getting-started
 
 Welcome to the documentation, you can find a quick guide on basic setup and commands below.
 
-After setting up the plugin, you should take a look at some [basic terminology](https://github.com/Membercat-Studios/Streamlabs-Integration/wiki/Basic-Terminology), and then continue reading from there.
+After setting up the plugin, you should take a look at some [basic terminology](./basic-terminology), and then continue reading from there.
 
 ---
 ## Obtaining your Streamlabs socket token

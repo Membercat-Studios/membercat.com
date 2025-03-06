@@ -20,7 +20,7 @@ The socket token works similar to a password and username, allowing the plugin t
 `send_status_messages` will determine whether status messages get sent, note that those will only be sent to players with the `streamlabs.status` permission.
 
 ## Affected players
-The `affected_players` list contains usernames of players who will receive messages sent by actions and who will be listed in the [`{player}` placeholder in commands](https://github.com/Membercat-Studios/Streamlabs-Integration/wiki/Commands#placeholders-and-affected-players).
+The `affected_players` list contains usernames of players who will receive messages sent by actions and who will be listed in the [`{player}` placeholder in commands](./commands#placeholders-and-affected-players).
 Affected players can also be modified directly by `/streamlabs player add/remove {player}` without having to reload the config.
 
 # Configuration Issues
