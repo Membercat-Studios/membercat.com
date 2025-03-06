@@ -6,7 +6,7 @@
 
 A high-quality website built for Membercat Studios, providing innovative Minecraft experiences and developer tools.
 
-[![Discord](https://img.shields.io/discord/748158402659745904?color=5865F2&label=Discord&logo=discord&logoColor=white)](https://discord.gg/membercat)
+[![Discord](https://img.shields.io/discord/748158402659745904?color=5865F2&label=Discord&logo=discord&logoColor=white)](https://dc.kasai.gg)
 [![License](https://img.shields.io/badge/License-Proprietary-red.svg)](LICENSE)
 
 </div>

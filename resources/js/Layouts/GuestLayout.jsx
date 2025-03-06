@@ -9,7 +9,7 @@ export default function GuestLayout({ children }) {
             name: "Discord Community",
             description: "Join our Discord server",
             icon: "fab fa-discord",
-            href: "https://discord.gg/membercat",
+            href: "https://dc.kasai.gg",
             iconBg: "bg-[#5865F2]/10",
             iconColor: "text-[#5865F2]",
         },
