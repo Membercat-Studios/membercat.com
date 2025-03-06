@@ -38,31 +38,24 @@ class DocsController extends Controller
     public function index()
     {
         return Inertia::render('Docs/Home', [
-            'sections' => $this->getDocsSections(),
+            'sectionData' => $this->getDocsSection(),
         ]);
     }
 
-    public function show($section, $page = 'index')
+    public function show($path)
     {
-        $singleFilePath = "{$this->docsPath}/{$section}.md";
-        $categoryFilePath = "{$this->docsPath}/{$section}/{$page}.md";
-        
-        if (File::exists($singleFilePath)) {
-            $filePath = $singleFilePath;
-        } elseif (File::exists($categoryFilePath)) {
-            $filePath = $categoryFilePath;
-        } else {
-            abort(404);
+        $sectionData = $this->getDocsSection();
+        $section = $sectionData['sections'][$path] ?? abort(404);
+
+        if ($section['type'] === 'category') {
+            return $this->show($section['firstSection']);
         }
 
-        $document = YamlFrontMatter::parse(File::get($filePath));
-        $metadata = $document->matter();
-        $html = $this->converter->convert($document->body())->getContent();
-        
-        $html = preg_replace_callback('/<pre><code class="language-([^"]+)">(.*?)\n?<\/code><\/pre>/s', function($matches) {
+        $html = $this->converter->convert($section['content'])->getContent();
+        $html = preg_replace_callback('/<pre><code class="language-([^"]+)">(.*?)\n?<\/code><\/pre>/s', function ($matches) {
             $language = $matches[1];
             $code = rtrim($matches[2]);
-            
+
             return sprintf(
                 '<div class="relative group">
                     <button 
@@ -84,117 +77,95 @@ class DocsController extends Controller
             );
         }, $html);
 
+        $section['content'] = $html;
         return Inertia::render('Docs/Show', [
-            'sections' => $this->getDocsSections(),
+            'sectionData' => $sectionData,
             'currentSection' => $section,
-            'currentPage' => $page,
-            'content' => $html,
-            'metadata' => $metadata,
             'tableOfContents' => $this->generateTableOfContents($html),
         ]);
     }
 
-    protected function getDocsSections()
+    protected function getDocsSection($path = '')
     {
-        if (!File::exists($this->docsPath)) {
+        $actualPath = $this->docsPath . '/' . $path;
+        if (!File::exists($actualPath)) {
             return [];
         }
 
-        $sections = [];
-
-        $singleFiles = collect(File::files($this->docsPath))
+        $subSections = [];
+        $singleFiles = collect(File::files($actualPath))
             ->filter(fn($file) => $file->getExtension() === 'md')
-            ->map(function ($file) {
-                $content = File::get($file->getPathname());
-                $document = YamlFrontMatter::parse($content);
-                $metadata = $document->matter();
-
-                return [
-                    'name' => $file->getFilenameWithoutExtension(),
-                    'title' => $metadata['title'] ?? ucfirst(str_replace('-', ' ', $file->getFilenameWithoutExtension())),
-                    'description' => $metadata['description'] ?? '',
-                    'position' => $metadata['position'] ?? 0,
-                    'type' => 'single',
-                ];
-            })
-            ->sortBy('position')
-            ->values()
-            ->all();
+            ->map(fn($file) => $this->parseFileData($file, $path));
 
         foreach ($singleFiles as $file) {
-            $sections[] = [
-                'name' => $file['title'],
-                'title' => $file['title'],
-                'description' => $file['description'],
-                'directory' => $file['name'],
-                'position' => $file['position'],
-                'type' => 'single',
-            ];
+            $sections[$file['path']] = $file;
+            $subSections[] = $file['path'];
         }
 
-        $categorizedSections = collect(File::directories($this->docsPath))
-            ->map(function ($dir) {
-                $categoryFile = $dir . '/category.json';
-                $metadata = File::exists($categoryFile) 
-                    ? json_decode(File::get($categoryFile), true)
-                    : [
-                        'name' => ucfirst(str_replace('-', ' ', basename($dir))),
-                        'position' => 999,
-                    ];
+        foreach (File::directories($actualPath) as $dir) {
+            $subPath = $this->path($path, basename($dir));
+            $result = $this->getDocsSection($subPath);
+            $sections[$subPath] = $result['this'];
+            $subSections[] = $subPath;
+            foreach ($result['sections'] as $sect) {
+                $sections[$sect['path']] = $sect;
+            }
+        }
 
-                $pages = collect(File::files($dir))
-                    ->filter(fn($file) => $file->getExtension() === 'md')
-                    ->map(function ($file) {
-                        $content = File::get($file->getPathname());
-                        $document = YamlFrontMatter::parse($content);
-                        $metadata = $document->matter();
+        $categoryFile = $actualPath . '/category.json';
+        $metadata = File::exists($categoryFile) ? json_decode(File::get($categoryFile), true) : [];
+        $firstSection = !empty($subSections) ? $subSections[0] : NULL;
+        $section = array_merge($metadata, [
+            'type' => 'category',
+            'name' => $metadata['name'] ?? ucfirst(str_replace('-', ' ', basename($actualPath))),
+            'path' => $path,
+            'firstSection' => array_key_exists('first_section', $metadata) ? $this->path($path, $metadata['first_section']) : $firstSection,
+            'subSections' => $subSections,
+            'position' => $metadata['position'] ?? 999,
+        ]);
 
-                        return [
-                            'name' => $file->getFilenameWithoutExtension(),
-                            'title' => $metadata['title'] ?? ucfirst(str_replace('-', ' ', $file->getFilenameWithoutExtension())),
-                            'description' => $metadata['description'] ?? '',
-                            'position' => $metadata['position'] ?? 999,
-                        ];
-                    })
-                    ->sortBy('position')
-                    ->values()
-                    ->all();
+        return ['sections' => $sections ?? [], 'this' => $section];
+    }
 
-                return array_merge($metadata, [
-                    'name' => $metadata['name'],
-                    'pages' => $pages,
-                    'directory' => basename($dir),
-                    'type' => 'category',
-                    'position' => $metadata['position'] ?? 999,
-                ]);
-            })
-            ->sortBy('position')
-            ->values()
-            ->all();
+    protected function parseFileData($file, $path)
+    {
+        $content = File::get($file->getPathname());
+        $document = YamlFrontMatter::parse($content);
+        $metadata = $document->matter();
+        $filename = $file->getFilenameWithoutExtension();
 
-        return collect(array_merge($sections, $categorizedSections))
-            ->sortBy('position')
-            ->values()
-            ->all();
+        return [
+            'type' => 'single',
+            'path' => $this->path($path, $filename),
+            'title' => $metadata['title'] ?? ucfirst(str_replace('-', ' ', $filename)),
+            'description' => $metadata['description'] ?? '',
+            'content' => $document->body(),
+            'position' => $metadata['position'] ?? 999,
+        ];
+    }
+
+    protected function path($base, $nextElement)
+    {
+        return empty($base) ? $nextElement : $base . '/' . $nextElement;
     }
 
     protected function generateTableOfContents($html)
     {
         preg_match_all('/<h([2-3])\s+id="(.+?)">(.+?)<\/h[2-3]>/', $html, $matches, PREG_SET_ORDER);
-        
+
         $toc = [];
         foreach ($matches as $match) {
             $level = (int)$match[1];
             $id = $match[2];
             $title = strip_tags($match[3]);
-            
+
             $toc[] = [
                 'level' => $level,
                 'id' => $id,
                 'title' => $title
             ];
         }
-        
+
         return $toc;
     }
-} 
+}

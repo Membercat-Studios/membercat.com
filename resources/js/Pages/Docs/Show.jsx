@@ -3,11 +3,8 @@ import DocsLayout from "@/Layouts/DocsLayout";
 import { useEffect } from "react";
 
 export default function Show({
-    content,
-    metadata,
-    sections,
+    sectionData,
     currentSection,
-    currentPage,
     tableOfContents,
 }) {
     useEffect(() => {
@@ -23,25 +20,24 @@ export default function Show({
                 }, 1000);
             });
         });
-    }, [content]);
+    }, [currentSection.content]);
 
     return (
         <DocsLayout
-            sections={sections}
-            currentSection={currentSection}
-            currentPage={currentPage}
+            sectionData={sectionData}
+            currentPath={currentSection.path}
             tableOfContents={tableOfContents}
         >
-            <Head title={metadata.title} />
+            <Head title={currentSection.title} />
 
             <div className="mb-12">
                 <div className="space-y-4">
                     <h1 className="text-4xl sm:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70">
-                        {metadata.title}
+                        {currentSection.title}
                     </h1>
-                    {metadata.description && (
+                    {currentSection.description && (
                         <p className="text-lg text-zinc-400 leading-relaxed">
-                            {metadata.description}
+                            {currentSection.description}
                         </p>
                     )}
                 </div>
@@ -76,7 +72,7 @@ export default function Show({
                     prose-pre:relative
                     [&_pre_.copy-feedback]:absolute [&_pre_.copy-feedback]:top-3 [&_pre_.copy-feedback]:right-3
                     [&_pre_.copy-feedback]:opacity-0 [&_pre_.copy-feedback:hover]:opacity-100"
-                dangerouslySetInnerHTML={{ __html: content }}
+                dangerouslySetInnerHTML={{ __html: currentSection.content }}
             />
         </DocsLayout>
     );
