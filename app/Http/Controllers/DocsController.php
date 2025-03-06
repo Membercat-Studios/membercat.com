@@ -121,7 +121,7 @@ class DocsController extends Controller
             'path' => $path,
             'firstSection' => array_key_exists('first_section', $metadata) ? $this->path($path, $metadata['first_section']) : $firstSection,
             'subSections' => $subSections,
-            'position' => $metadata['position'] ?? 999,
+            'position' => $metadata['position'] ?? 0,
         ]);
 
         return ['sections' => $sections ?? [], 'this' => $section];
@@ -140,7 +140,7 @@ class DocsController extends Controller
             'title' => $metadata['title'] ?? ucfirst(str_replace('-', ' ', $filename)),
             'description' => $metadata['description'] ?? '',
             'content' => $document->body(),
-            'position' => $metadata['position'] ?? 999,
+            'position' => $metadata['position'] ?? 0,
         ];
     }
 
