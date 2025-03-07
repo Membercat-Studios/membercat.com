@@ -7,21 +7,6 @@ export default function Show({
     currentSection,
     tableOfContents,
 }) {
-    useEffect(() => {
-        // Add click feedback for copy buttons
-        const copyButtons = document.querySelectorAll(".copy-feedback");
-        copyButtons.forEach((button) => {
-            button.addEventListener("click", () => {
-                const icon = button.querySelector("i");
-                const originalClass = icon.className;
-                icon.className = "fas fa-check";
-                setTimeout(() => {
-                    icon.className = originalClass;
-                }, 1000);
-            });
-        });
-    }, [currentSection.content]);
-
     return (
         <DocsLayout
             sectionData={sectionData}
@@ -69,9 +54,7 @@ export default function Show({
                     [&_.table-of-contents]:bg-white/5 [&_.table-of-contents]:rounded-xl 
                     [&_.table-of-contents]:p-6 [&_.table-of-contents]:my-8 
                     [&_.table-of-contents]:border [&_.table-of-contents]:border-white/10
-                    prose-pre:relative
-                    [&_pre_.copy-feedback]:absolute [&_pre_.copy-feedback]:top-3 [&_pre_.copy-feedback]:right-3
-                    [&_pre_.copy-feedback]:opacity-0 [&_pre_.copy-feedback:hover]:opacity-100"
+                    prose-pre:relative"
                 dangerouslySetInnerHTML={{ __html: currentSection.content }}
             />
         </DocsLayout>

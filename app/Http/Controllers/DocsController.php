@@ -44,8 +44,8 @@ class DocsController extends Controller
         
         $environment->addExtension(new CommonMarkCoreExtension());
         $environment->addExtension(new GithubFlavoredMarkdownExtension());
-        $environment->addRenderer(FencedCode::class, new FencedCodeRenderer());
-        $environment->addRenderer(IndentedCode::class, new IndentedCodeRenderer());
+        $environment->addRenderer(FencedCode::class, new CodeWithCopyButtonRenderer(new FencedCodeRenderer()));
+        $environment->addRenderer(IndentedCode::class, new CodeWithCopyButtonRenderer(new IndentedCodeRenderer()));
 
         $this->converter = new MarkdownConverter($environment);
     }
