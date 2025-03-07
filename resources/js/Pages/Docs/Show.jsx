@@ -54,7 +54,7 @@ export default function Show({
                     prose-code:text-primary/90 prose-code:bg-white/5 prose-code:px-1.5 prose-code:py-0.5 
                     prose-code:rounded-md prose-code:before:content-[''] prose-code:after:content-['']
                     prose-pre:bg-zinc-900 prose-pre:border prose-pre:border-white/5
-                    prose-pre:shadow-xl prose-pre:rounded-xl prose-pre:p-4
+                    prose-pre:shadow-xl prose-pre:rounded-xl prose-pre:p-0
                     prose-ul:my-6 prose-ul:list-disc prose-ul:marker:text-primary/50
                     prose-ol:my-6 prose-ol:list-decimal prose-ol:marker:text-primary/50
                     prose-li:my-2

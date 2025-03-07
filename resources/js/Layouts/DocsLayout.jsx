@@ -15,24 +15,6 @@ export default function DocsLayout({
     const contentRef = useRef(null);
 
     useEffect(() => {
-        const loadPrism = async () => {
-            const Prism = (await import("prismjs")).default;
-            await import("prismjs/themes/prism-tomorrow.css");
-            await Promise.all([
-                import("prismjs/components/prism-markup"),
-                import("prismjs/components/prism-css"),
-                import("prismjs/components/prism-javascript"),
-                import("prismjs/components/prism-bash"),
-                import("prismjs/components/prism-json"),
-                import("prismjs/components/prism-java"),
-                import("prismjs/components/prism-php"),
-                import("prismjs/components/prism-yaml"),
-                import("prismjs/components/prism-markdown"),
-            ]);
-            Prism.highlightAll();
-        };
-        loadPrism();
-
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {

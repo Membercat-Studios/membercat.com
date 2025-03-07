@@ -17,6 +17,7 @@
         "league/commonmark": "^2.6",
         "socialiteproviders/discord": "^4.2",
         "socialiteproviders/github": "^4.1",
+        "spatie/commonmark-highlighter": "^3.0",
         "spatie/yaml-front-matter": "^2.1",
         "tightenco/ziggy": "^2.0"
     },

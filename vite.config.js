@@ -5,7 +5,7 @@ import tailwind from "@tailwindcss/vite";
 
 export default defineConfig({
     server: {
-        host: "localhost",
+        host: "membercat.test",
     },
     plugins: [
         laravel({

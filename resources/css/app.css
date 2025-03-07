@@ -5,3 +5,8 @@
 @theme {
     --color-primary: #bf9f6f;
 }
+
+/* Reset the background color for code changed by the higlight.js rainbow theme */
+code.hljs {
+    background: none;
+}

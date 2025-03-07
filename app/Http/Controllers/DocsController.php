@@ -2,10 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\CommonMark\CodeWithCopyButtonRenderer;
 use Illuminate\Support\Facades\File;
 use Inertia\Inertia;
-use League\CommonMark\GithubFlavoredMarkdownConverter;
+use League\CommonMark\Environment\Environment;
+use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
+use League\CommonMark\Extension\CommonMark\Node\Block\FencedCode;
+use League\CommonMark\Extension\CommonMark\Node\Block\IndentedCode;
+use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
+use League\CommonMark\MarkdownConverter;
 use Spatie\YamlFrontMatter\YamlFrontMatter;
+use Spatie\CommonMarkHighlighter\FencedCodeRenderer;
+use Spatie\CommonMarkHighlighter\IndentedCodeRenderer;
 
 class DocsController extends Controller
 {
@@ -15,7 +23,7 @@ class DocsController extends Controller
     public function __construct()
     {
         $this->docsPath = resource_path('docs');
-        $this->converter = new GithubFlavoredMarkdownConverter([
+        $environment = new Environment([
             'html_input' => 'allow',
             'allow_unsafe_links' => false,
             'heading_permalink' => [
@@ -33,6 +41,13 @@ class DocsController extends Controller
                 'enable_strikethrough' => true,
             ],
         ]);
+        
+        $environment->addExtension(new CommonMarkCoreExtension());
+        $environment->addExtension(new GithubFlavoredMarkdownExtension());
+        $environment->addRenderer(FencedCode::class, new FencedCodeRenderer());
+        $environment->addRenderer(IndentedCode::class, new IndentedCodeRenderer());
+
+        $this->converter = new MarkdownConverter($environment);
     }
 
     public function index()
@@ -52,31 +67,6 @@ class DocsController extends Controller
         }
 
         $html = $this->converter->convert($section['content'])->getContent();
-        $html = preg_replace_callback('/<pre><code class="language-([^"]+)">(.*?)\n?<\/code><\/pre>/s', function ($matches) {
-            $language = $matches[1];
-            $code = rtrim($matches[2]);
-
-            return sprintf(
-                '<div class="relative group">
-                    <button 
-                        onclick="navigator.clipboard.writeText(this.parentElement.querySelector(\'code\').textContent).then(() => { 
-                            const icon = this.querySelector(\'i\');
-                            icon.className = \'fas fa-check\';
-                            setTimeout(() => icon.className = \'fas fa-copy\', 1000);
-                        })" 
-                        class="copy-feedback absolute top-3 right-3 p-2 rounded-lg bg-white/5 text-zinc-400 
-                               opacity-0 group-hover:opacity-100 hover:text-white transition-all duration-200"
-                        title="Copy to clipboard"
-                    >
-                        <i class="fa-solid fa-clipboard"></i>
-                    </button>
-                    <pre><code class="language-%s">%s</code></pre>
-                </div>',
-                $language,
-                $code
-            );
-        }, $html);
-
         $section['content'] = $html;
         return Inertia::render('Docs/Show', [
             'sectionData' => $sectionData,
