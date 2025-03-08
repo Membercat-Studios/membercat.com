@@ -54,7 +54,7 @@ Our platform offers several key features to help you build amazing Minecraft exp
 
 If you need assistance, you can:
 
--   Join our [Discord](https://discord.gg/membercat) community
+-   Join our [Discord](https://dc.kasai.gg) community
 -   Check out our [GitHub](https://github.com/membercat-studios) repositories
 -   Browse our [Modrinth](https://modrinth.com/organization/membercat) projects
 

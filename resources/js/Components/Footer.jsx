@@ -24,7 +24,7 @@ const FOOTER_LINKS = {
     Social: [
         {
             label: "Discord",
-            href: "https://discord.gg/membercat",
+            href: "https://dc.kasai.gg",
             icon: "fab fa-discord",
             color: "hover:text-[#5865F2]",
         },

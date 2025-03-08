@@ -6,9 +6,8 @@ import DocsSidebar from "@/Components/Docs/DocsSidebar";
 
 export default function DocsLayout({
     children,
-    sections = [],
-    currentSection = "",
-    currentPage = "",
+    sectionData,
+    currentPath = "",
     tableOfContents = [],
 }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -16,24 +15,6 @@ export default function DocsLayout({
     const contentRef = useRef(null);
 
     useEffect(() => {
-        const loadPrism = async () => {
-            const Prism = (await import("prismjs")).default;
-            await import("prismjs/themes/prism-tomorrow.css");
-            await Promise.all([
-                import("prismjs/components/prism-markup"),
-                import("prismjs/components/prism-css"),
-                import("prismjs/components/prism-javascript"),
-                import("prismjs/components/prism-bash"),
-                import("prismjs/components/prism-json"),
-                import("prismjs/components/prism-java"),
-                import("prismjs/components/prism-php"),
-                import("prismjs/components/prism-yaml"),
-                import("prismjs/components/prism-markdown"),
-            ]);
-            Prism.highlightAll();
-        };
-        loadPrism();
-
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
@@ -62,9 +43,8 @@ export default function DocsLayout({
                         <div className="hidden lg:block w-64 flex-shrink-0 sticky top-16 h-[calc(100vh-4rem)] border-r border-zinc-800/50">
                             <div className="py-8 px-6 overflow-y-auto h-full scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800">
                                 <DocsSidebar
-                                    sections={sections}
-                                    currentSection={currentSection}
-                                    currentPage={currentPage}
+                                    sectionData={sectionData}
+                                    currentPath={currentPath}
                                 />
                             </div>
                         </div>
@@ -130,9 +110,8 @@ export default function DocsLayout({
                     <div className="absolute inset-y-0 left-0 w-80 bg-zinc-950 border-r border-zinc-800/50">
                         <div className="p-6 overflow-y-auto h-full">
                             <DocsSidebar
-                                sections={sections}
-                                currentSection={currentSection}
-                                currentPage={currentPage}
+                                sectionData={sectionData}
+                                currentPath={currentPath}
                             />
                         </div>
                     </div>

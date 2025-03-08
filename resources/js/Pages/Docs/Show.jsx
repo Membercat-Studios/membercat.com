@@ -3,45 +3,26 @@ import DocsLayout from "@/Layouts/DocsLayout";
 import { useEffect } from "react";
 
 export default function Show({
-    content,
-    metadata,
-    sections,
+    sectionData,
     currentSection,
-    currentPage,
     tableOfContents,
 }) {
-    useEffect(() => {
-        // Add click feedback for copy buttons
-        const copyButtons = document.querySelectorAll(".copy-feedback");
-        copyButtons.forEach((button) => {
-            button.addEventListener("click", () => {
-                const icon = button.querySelector("i");
-                const originalClass = icon.className;
-                icon.className = "fas fa-check";
-                setTimeout(() => {
-                    icon.className = originalClass;
-                }, 1000);
-            });
-        });
-    }, [content]);
-
     return (
         <DocsLayout
-            sections={sections}
-            currentSection={currentSection}
-            currentPage={currentPage}
+            sectionData={sectionData}
+            currentPath={currentSection.path}
             tableOfContents={tableOfContents}
         >
-            <Head title={metadata.title} />
+            <Head title={currentSection.title} />
 
             <div className="mb-12">
                 <div className="space-y-4">
                     <h1 className="text-4xl sm:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70">
-                        {metadata.title}
+                        {currentSection.title}
                     </h1>
-                    {metadata.description && (
+                    {currentSection.description && (
                         <p className="text-lg text-zinc-400 leading-relaxed">
-                            {metadata.description}
+                            {currentSection.description}
                         </p>
                     )}
                 </div>
@@ -58,7 +39,7 @@ export default function Show({
                     prose-code:text-primary/90 prose-code:bg-white/5 prose-code:px-1.5 prose-code:py-0.5 
                     prose-code:rounded-md prose-code:before:content-[''] prose-code:after:content-['']
                     prose-pre:bg-zinc-900 prose-pre:border prose-pre:border-white/5
-                    prose-pre:shadow-xl prose-pre:rounded-xl prose-pre:p-4
+                    prose-pre:shadow-xl prose-pre:rounded-xl prose-pre:p-0
                     prose-ul:my-6 prose-ul:list-disc prose-ul:marker:text-primary/50
                     prose-ol:my-6 prose-ol:list-decimal prose-ol:marker:text-primary/50
                     prose-li:my-2
@@ -73,10 +54,8 @@ export default function Show({
                     [&_.table-of-contents]:bg-white/5 [&_.table-of-contents]:rounded-xl 
                     [&_.table-of-contents]:p-6 [&_.table-of-contents]:my-8 
                     [&_.table-of-contents]:border [&_.table-of-contents]:border-white/10
-                    prose-pre:relative
-                    [&_pre_.copy-feedback]:absolute [&_pre_.copy-feedback]:top-3 [&_pre_.copy-feedback]:right-3
-                    [&_pre_.copy-feedback]:opacity-0 [&_pre_.copy-feedback:hover]:opacity-100"
-                dangerouslySetInnerHTML={{ __html: content }}
+                    prose-pre:relative"
+                dangerouslySetInnerHTML={{ __html: currentSection.content }}
             />
         </DocsLayout>
     );
