@@ -54,3 +54,23 @@ Changelog information for membercat.com. All changes from `0.0.1-Alpha+1` and ab
     -   DocsLayout component handles the layout of the documentation pages.
 
 **THESE FEATURES ARE STILL VERY UNSTABLE AND WILL LIKELY CHANGE IN THE FUTURE**
+
+## 0.2.0-Alpha+1 (2025-03-06)
+
+-   Small Changes to SocialiteController
+-   Rework of Documentation (by codingcat2468)
+    -   Switched to `commonmark-highlight` for syntax highlighting
+    -   "Copy Code" button now works on codeblocks with > 2 lines.
+    -   Files are now loaded recursively, to allow infinitely nested categories.
+    -   Refactored DocsSidebar with recursive section loading
+    -   The "docs" route can now accept infinite paths to sections/pages
+-   Update Axios to 1.8.2
+-   Remove unused components
+-   Fixed broken Discord links
+
+**BREAKING CHANGES:**
+
+-   Sections are now provided as "sectionData"
+-   Access sections with "sectionData.sections" by path
+-   Top-level sections are in "sectionData.this.subSections"
+-   Sorting moved to client-side using "position" property

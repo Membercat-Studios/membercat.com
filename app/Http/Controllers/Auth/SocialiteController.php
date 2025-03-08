@@ -79,8 +79,6 @@ class SocialiteController extends Controller
 
             Auth::login($user);
             
-            Log::info('Discord auth successful', ['user_id' => $user->id]);
-            
             return redirect('/');
     }
 
@@ -115,8 +113,6 @@ class SocialiteController extends Controller
             }
 
             Auth::login($user);
-            
-            Log::info('GitHub auth successful', ['user_id' => $user->id]);
             
             return redirect('/');
     }
