@@ -59,12 +59,13 @@ Changelog information for membercat.com. All changes from `0.0.1-Alpha+1` and ab
 
 -   Small Changes to SocialiteController
 -   Rework of Documentation (by codingcat2468)
-    -   Switched to `commonmark-highlight` for syntax highlighting
+    -   Switched to `commonmark-highlight` for syntax highlighting. (composer)
     -   "Copy Code" button now works on codeblocks with > 2 lines.
     -   Files are now loaded recursively, to allow infinitely nested categories.
     -   Refactored DocsSidebar with recursive section loading
     -   The "docs" route can now accept infinite paths to sections/pages
--   Update Axios to 1.8.2
+    -   View the full changes [here](https://github.com/Membercat-Studios/membercat.com/pull/1)
+-   Update Axios to 1.8.2 (pnpm)
 -   Remove unused components
 -   Fixed broken Discord links
 
@@ -74,3 +75,7 @@ Changelog information for membercat.com. All changes from `0.0.1-Alpha+1` and ab
 -   Access sections with "sectionData.sections" by path
 -   Top-level sections are in "sectionData.this.subSections"
 -   Sorting moved to client-side using "position" property
+
+## 0.2.1-Alpha+1 (2025-03-07)
+
+-   Removed `prismjs` and Typescript related dependencies. (pnpm)
