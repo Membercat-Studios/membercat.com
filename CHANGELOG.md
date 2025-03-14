@@ -79,5 +79,23 @@ Changelog information for membercat.com. All changes from `0.0.1-Alpha+1` and ab
 ## 0.2.1-Alpha+1 (2025-03-07)
 
 -   Removed `prismjs` and Typescript related dependencies. (pnpm)
--   Rework of Search component, to be faster and more descriptive
--   Created Projects page with advanced filtering and sorting.
+-   Enhanced Search component
+    -   Optimized performance with client-side filtering
+    -   Reduced debounce time for faster response
+    -   Improved UI with larger project icons
+    -   Added project type badges
+    -   Implemented caching to reduce API calls
+    -   Added keyboard navigation support
+-   Created comprehensive Projects page
+    -   Modern UI with card-based layout
+    -   Advanced filtering by project type and category
+    -   Multiple sorting options (downloads, updated date, name)
+    -   Slide-in filter panel with responsive design
+    -   Active filter indicators with one-click removal
+    -   Banner images from project galleries
+    -   Animated transitions and hover effects
+-   Backend improvements
+    -   Added banner image support to ProjectController
+    -   Implemented server-side filtering and sorting
+    -   Optimized API responses with metadata
+    -   Added caching for better performance
