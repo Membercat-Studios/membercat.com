@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDebounce } from "use-debounce";
+import axios from "axios";
 
 export default function Search({ isOpen, setIsOpen }) {
     const [searchTerm, setSearchTerm] = useState("");
-    const [debouncedSearch] = useDebounce(searchTerm, 200);
+    const [debouncedSearch] = useDebounce(searchTerm, 150);
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [allProjects, setAllProjects] = useState([]);
 
     useEffect(() => {
         const handleEscape = (e) => {
@@ -29,47 +31,70 @@ export default function Search({ isOpen, setIsOpen }) {
     }, [isOpen]);
 
     useEffect(() => {
-        const searchProjects = async () => {
-            if (!debouncedSearch) {
-                setProjects([]);
-                return;
-            }
+        const fetchAllProjects = async () => {
+            if (allProjects.length > 0) return;
 
-            setLoading(true);
             try {
-                const response = await fetch(
+                const response = await axios.get(
                     route("modrinth.membercat-projects")
                 );
-                const allProjects = await response.json();
-
-                const searchTerms = debouncedSearch.toLowerCase().split(" ");
-                const filtered = allProjects.filter((project) => {
-                    const projectText = `
-                        ${project.name.toLowerCase()} 
-                        ${project.summary.toLowerCase()} 
-                        ${project.description.toLowerCase()} 
-                        ${project.categories.join(" ").toLowerCase()}
-                    `;
-                    return searchTerms.every((term) =>
-                        projectText.includes(term)
-                    );
-                });
-
-                setProjects(filtered);
+                if (response.data.projects) {
+                    setAllProjects(response.data.projects);
+                }
             } catch (error) {
-                console.error("Error searching projects:", error);
-            } finally {
-                setLoading(false);
+                console.error("Error fetching projects:", error);
             }
         };
 
-        searchProjects();
-    }, [debouncedSearch]);
+        if (isOpen) {
+            fetchAllProjects();
+        }
+    }, [isOpen, allProjects.length]);
+
+    useEffect(() => {
+        if (!debouncedSearch) {
+            setProjects([]);
+            return;
+        }
+
+        setLoading(true);
+
+        const timeoutId = setTimeout(() => {
+            const searchTerms = debouncedSearch.toLowerCase().split(" ");
+
+            const filtered = allProjects.filter((project) => {
+                const projectText = `${project.name.toLowerCase()} ${project.summary.toLowerCase()} ${project.categories
+                    .join(" ")
+                    .toLowerCase()}`;
+                return searchTerms.every((term) => projectText.includes(term));
+            });
+
+            setProjects(filtered);
+            setLoading(false);
+        }, 10);
+
+        return () => clearTimeout(timeoutId);
+    }, [debouncedSearch, allProjects]);
 
     const formatDownloads = (downloads) => {
         if (downloads >= 1000000) return `${(downloads / 1000000).toFixed(1)}M`;
         if (downloads >= 1000) return `${(downloads / 1000).toFixed(1)}K`;
         return downloads.toString();
+    };
+
+    const formatProjectType = (type) => {
+        if (!type) return "Unknown";
+
+        const typeMap = {
+            mod: "Mod",
+            modpack: "Modpack",
+            plugin: "Plugin",
+            datapack: "Data Pack",
+            resourcepack: "Resource Pack",
+            shader: "Shader",
+        };
+
+        return typeMap[type] || type.charAt(0).toUpperCase() + type.slice(1);
     };
 
     if (!isOpen) return null;
@@ -79,7 +104,7 @@ export default function Search({ isOpen, setIsOpen }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.15 }}
             className="fixed inset-0 z-[100] flex items-start justify-center h-screen bg-black/60 backdrop-blur-[2px] overflow-hidden"
         >
             <div
@@ -91,11 +116,8 @@ export default function Search({ isOpen, setIsOpen }) {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.98 }}
-                    transition={{
-                        duration: 0.2,
-                        ease: "easeOut",
-                    }}
-                    className="w-full max-w-4xl mx-auto bg-zinc-900/90 backdrop-blur-xl rounded-2xl border border-zinc-800/50 p-6 shadow-xl relative"
+                    transition={{ duration: 0.15, ease: "easeOut" }}
+                    className="w-full max-w-3xl mx-auto bg-zinc-900/90 backdrop-blur-xl rounded-2xl border border-zinc-800/50 p-6 shadow-xl relative"
                     onClick={(e) => e.stopPropagation()}
                 >
                     <div className="relative">
@@ -124,65 +146,80 @@ export default function Search({ isOpen, setIsOpen }) {
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                transition={{ duration: 0.2 }}
-                                className="mt-6 space-y-4 max-h-[60vh] overflow-y-auto custom-scrollbar pr-2"
+                                transition={{ duration: 0.15 }}
+                                className="mt-6 space-y-3 max-h-[60vh] overflow-y-auto custom-scrollbar pr-2"
                             >
-                                {projects.map((project) => (
-                                    <motion.a
-                                        key={project.id}
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                        transition={{ duration: 0.2 }}
-                                        href={`https://modrinth.com/project/${project.slug}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="block rounded-xl bg-zinc-800/50 border border-zinc-700 p-4 hover:border-primary/50 transition-all duration-300 group w-full"
-                                    >
-                                        <div className="flex items-center gap-4">
+                                {projects.length === 0 && !loading ? (
+                                    <div className="text-center py-8 text-zinc-400">
+                                        No projects found
+                                    </div>
+                                ) : (
+                                    projects.map((project) => (
+                                        <motion.a
+                                            key={project.id}
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            transition={{ duration: 0.15 }}
+                                            href={`https://modrinth.com/project/${project.slug}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-start gap-4 p-4 rounded-xl bg-zinc-800/50 border border-zinc-700 hover:border-primary/50 transition-all duration-300 group w-full"
+                                        >
                                             <div className="flex-shrink-0">
                                                 {project.icon_url ? (
                                                     <img
                                                         src={project.icon_url}
                                                         alt={project.name}
-                                                        className="w-12 h-12 rounded-lg border border-zinc-700 p-1 object-cover"
+                                                        className="w-16 h-16 rounded-lg border border-zinc-700 object-cover group-hover:shadow-md group-hover:shadow-primary/10 transition-all"
+                                                        loading="lazy"
+                                                        width="64"
+                                                        height="64"
                                                     />
                                                 ) : (
-                                                    <div className="w-12 h-12 rounded-lg bg-zinc-700 flex items-center justify-center">
-                                                        <i className="fas fa-cube text-xl text-zinc-400" />
+                                                    <div className="w-16 h-16 rounded-lg bg-zinc-700 flex items-center justify-center">
+                                                        <i className="fas fa-cube text-2xl text-zinc-400" />
                                                     </div>
                                                 )}
                                             </div>
-                                            <div className="flex-1 min-w-0 mr-4">
-                                                <h3 className="text-lg font-semibold text-white group-hover:text-primary transition-colors">
-                                                    {project.name}
-                                                </h3>
-                                                <p className="text-sm text-zinc-400 truncate">
+
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <h3 className="text-lg font-semibold text-white group-hover:text-primary transition-colors truncate">
+                                                        {project.name}
+                                                    </h3>
+                                                    <span className="px-2 py-0.5 bg-zinc-700/80 rounded-md text-xs text-zinc-300 whitespace-nowrap">
+                                                        {formatProjectType(
+                                                            project
+                                                                .project_types?.[0] ||
+                                                                "unknown"
+                                                        )}
+                                                    </span>
+                                                </div>
+
+                                                <p className="text-sm text-zinc-400 line-clamp-2 mb-2">
                                                     {project.summary}
                                                 </p>
-                                            </div>
-                                            <div className="flex-shrink-0 flex items-center gap-1 text-sm text-zinc-400">
-                                                <i className="fas fa-download text-primary/70" />
-                                                <span>
-                                                    {formatDownloads(
-                                                        project.downloads
-                                                    )}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </motion.a>
-                                ))}
 
-                                {projects.length === 0 && !loading && (
-                                    <motion.div
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                        transition={{ duration: 0.2 }}
-                                        className="text-center py-8 text-zinc-400"
-                                    >
-                                        No projects found
-                                    </motion.div>
+                                                <div className="flex items-center gap-4 text-sm text-zinc-400">
+                                                    <div className="flex items-center gap-1">
+                                                        <i className="fas fa-download text-primary/70" />
+                                                        <span>
+                                                            {formatDownloads(
+                                                                project.downloads
+                                                            )}
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex items-center gap-1">
+                                                        <i className="fas fa-code-branch text-primary/70" />
+                                                        <span>
+                                                            {project.versions
+                                                                ?.length || 0}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </motion.a>
+                                    ))
                                 )}
                             </motion.div>
                         )}

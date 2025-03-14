@@ -79,3 +79,5 @@ Changelog information for membercat.com. All changes from `0.0.1-Alpha+1` and ab
 ## 0.2.1-Alpha+1 (2025-03-07)
 
 -   Removed `prismjs` and Typescript related dependencies. (pnpm)
+-   Rework of Search component, to be faster and more descriptive
+-   Created Projects page with advanced filtering and sorting.

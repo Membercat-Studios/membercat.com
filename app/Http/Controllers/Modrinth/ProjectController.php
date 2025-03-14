@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Modrinth;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\Request;
 
 class ProjectController extends Controller 
 {
@@ -62,7 +63,28 @@ class ProjectController extends Controller
         return $projects;
     }
 
-    public function fetchMembercatProjects()
+    private function getBannerFromGallery($gallery)
+    {
+        if (empty($gallery)) {
+            return null;
+        }
+
+        $featured = collect($gallery)->firstWhere('featured', true);
+        if ($featured) {
+            return $featured['url'];
+        }
+
+        $banner = collect($gallery)->first(function ($image) {
+            return $image['name'] && stripos($image['name'], 'banner') !== false;
+        });
+        if ($banner) {
+            return $banner['url'];
+        }
+
+        return $gallery[0]['url'] ?? null;
+    }
+
+    public function fetchMembercatProjects(Request $request)
     {
         $projects = $this->fetchRawData();
         
@@ -70,7 +92,65 @@ class ProjectController extends Controller
             return $projects;
         }
 
-        return collect($projects);
+        $collection = collect($projects);
+        
+        $allCategories = $collection->flatMap(function ($project) {
+            return $project['categories'];
+        })->unique()->sort()->values();
+        
+        $allProjectTypes = $collection->flatMap(function ($project) {
+            return $project['project_types'];
+        })->unique()->sort()->values();
+        
+        if ($request->has('project_type') && $request->project_type !== 'all') {
+            $collection = $collection->filter(function ($project) use ($request) {
+                return in_array($request->project_type, $project['project_types']);
+            });
+        }
+        
+        if ($request->has('category') && $request->category !== 'all') {
+            $collection = $collection->filter(function ($project) use ($request) {
+                return in_array($request->category, $project['categories']);
+            });
+        }
+        
+        if ($request->has('sort')) {
+            switch ($request->sort) {
+                case 'updated':
+                    $collection = $collection->sortByDesc('updated');
+                    break;
+                case 'downloads':
+                    $collection = $collection->sortByDesc('downloads');
+                    break;
+                case 'newest':
+                    $collection = $collection->sortByDesc('published');
+                    break;
+                case 'name':
+                    $collection = $collection->sortBy('name');
+                    break;
+                default:
+                    $collection = $collection->sortByDesc('downloads');
+            }
+        } else {
+            $collection = $collection->sortByDesc('downloads');
+        }
+        
+        $enhancedProjects = $collection->map(function ($project) {
+            $fullProject = $this->fetchProject($project['id']);
+            
+            $project['banner_url'] = $this->getBannerFromGallery($fullProject['gallery'] ?? []);
+            
+            return $project;
+        });
+        
+        return [
+            'projects' => $enhancedProjects->values()->toArray(),
+            'metadata' => [
+                'categories' => $allCategories,
+                'project_types' => $allProjectTypes,
+                'total' => $enhancedProjects->count()
+            ]
+        ];
     }
 
     public function top3Projects()
@@ -85,6 +165,8 @@ class ProjectController extends Controller
         ->sortByDesc('downloads')
         ->take(3)
         ->map(function ($project) {
+            $fullProject = $this->fetchProject($project['id']);
+            
             return [
                 'id' => $project['id'],
                 'slug' => $project['slug'],
@@ -92,13 +174,13 @@ class ProjectController extends Controller
                 'description' => $project['description'],
                 'summary' => $project['summary'],
                 'icon' => $project['icon_url'],
+                'banner_url' => $this->getBannerFromGallery($fullProject['gallery'] ?? []),
                 'downloads' => $project['downloads'],
                 'followers' => $project['followers'],
                 'versions' => $project['versions'],
                 'categories' => $project['categories'],
                 'project_types' => $project['project_types'],
                 'versions' => $project['versions'],
-                
             ];
         })
         ->values()
