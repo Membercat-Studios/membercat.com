@@ -102,29 +102,20 @@ Changelog information for membercat.com. All changes from `0.0.1-Alpha+1` and ab
 
 ## 0.3.0-Alpha+1 (2025-03-15)
 
-### Features
-
--   feat(news): implement news management system
--   feat(news): create NewsController for handling news posts
--   feat(news): add NewsCategoryController for managing categories
--   feat(ui): develop RichTextEditor component for content creation
--   feat(news): implement category management with CRUD operations
--   feat(validation): add validation for news posts and categories
--   feat(ui): create responsive news listing and detail pages
--   feat(ui): add modern modal system for category management
--   feat(ui): implement confirmation dialogs for destructive actions
--   feat(ui): improve error handling and user feedback
--   feat(ui): ensure responsive design for all news components
-
-### Performance
-
--   perf(db): optimize database queries for news retrieval
-
-### Refactor
-
--   refactor(news): add relationship between news posts and categories
-
-### Security
-
--   security(api): implement proper error handling for API requests
--   security(news): add security checks for category deletion
+-   Implemented News Management System
+    -   Created NewsController for handling news posts
+    -   Added NewsCategoryController for managing news categories
+    -   Developed RichTextEditor component for content creation
+    -   Implemented category management with CRUD operations
+    -   Added validation for news posts and categories
+    -   Created responsive news listing and detail pages
+-   UI/UX Improvements
+    -   Modern modal system for category management
+    -   Confirmation dialogs for destructive actions
+    -   Improved error handling and user feedback
+    -   Responsive design for all news components
+-   Backend Enhancements
+    -   Optimized database queries for news retrieval
+    -   Added relationship between news posts and categories
+    -   Implemented proper error handling for API requests
+    -   Added security checks for category deletion
