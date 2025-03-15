@@ -1,12 +1,13 @@
 import { Head } from "@inertiajs/react";
-import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
 
 import Button from "@/Components/Button";
 import Footer from "@/Components/Footer";
 import Navbar from "@/Components/Navbar/Navbar";
 import Search from "@/Components/Search";
+import { ImageSkeleton, TextSkeleton } from "@/Components/Skeletons";
 
 export default function Projects({ auth }) {
     const [loading, setLoading] = useState(true);
@@ -137,6 +138,65 @@ export default function Projects({ auth }) {
 
     const currentSortOption = sortOptions.find(
         (option) => option.id === filters.sort
+    );
+
+    const ProjectCardSkeleton = () => (
+        <div className="flex flex-col h-full overflow-hidden rounded-xl bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800">
+            <div className="relative">
+                <div className="h-32 bg-zinc-800 animate-pulse"></div>
+                <div className="absolute -bottom-8 left-6">
+                    <div className="p-1 bg-zinc-900 rounded-xl shadow-lg">
+                        <ImageSkeleton
+                            width="w-16"
+                            height="h-16"
+                            rounded="rounded-lg"
+                        />
+                    </div>
+                </div>
+                <div className="absolute top-4 right-4">
+                    <TextSkeleton
+                        width="w-20"
+                        height="h-6"
+                        className="rounded-full"
+                    />
+                </div>
+            </div>
+
+            <div className="flex-1 p-6 pt-10">
+                <TextSkeleton width="w-3/4" height="h-7" className="mb-3" />
+                <TextSkeleton width="w-full" height="h-4" className="mb-2" />
+                <TextSkeleton width="w-full" height="h-4" className="mb-2" />
+                <TextSkeleton width="w-2/3" height="h-4" className="mb-4" />
+
+                <div className="flex flex-wrap gap-2 mb-4">
+                    <TextSkeleton
+                        width="w-16"
+                        height="h-6"
+                        className="rounded-md"
+                    />
+                    <TextSkeleton
+                        width="w-20"
+                        height="h-6"
+                        className="rounded-md"
+                    />
+                    <TextSkeleton
+                        width="w-24"
+                        height="h-6"
+                        className="rounded-md"
+                    />
+                </div>
+            </div>
+
+            <div className="px-6 py-4 border-t border-zinc-800/80 bg-black/20">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <TextSkeleton width="w-16" height="h-5" />
+                        <TextSkeleton width="w-12" height="h-5" />
+                    </div>
+                    <TextSkeleton width="w-24" height="h-4" />
+                </div>
+            </div>
+        </div>
     );
 
     return (
@@ -425,11 +485,10 @@ export default function Projects({ auth }) {
                             </AnimatePresence>
 
                             {loading ? (
-                                <div className="flex flex-col items-center justify-center py-24">
-                                    <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary mb-4"></div>
-                                    <p className="text-zinc-400">
-                                        Loading projects...
-                                    </p>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {[...Array(6)].map((_, index) => (
+                                        <ProjectCardSkeleton key={index} />
+                                    ))}
                                 </div>
                             ) : error ? (
                                 <div className="text-center py-24 bg-zinc-900/30 rounded-2xl border border-zinc-800">

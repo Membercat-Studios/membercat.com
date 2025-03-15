@@ -1,7 +1,8 @@
 import { Head } from "@inertiajs/react";
-import DocsLayout from "@/Layouts/DocsLayout";
 import { motion } from "framer-motion";
+
 import { sortSections } from "@/Components/Docs/DocsSidebar";
+import DocsLayout from "@/Layouts/DocsLayout";
 
 export default function DocsHome({ sectionData }) {
     return (

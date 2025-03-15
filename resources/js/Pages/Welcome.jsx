@@ -5,6 +5,11 @@ import Button from "@/Components/Button";
 import Footer from "@/Components/Footer";
 import Navbar from "@/Components/Navbar/Navbar";
 import Search from "@/Components/Search";
+import {
+    CardSkeleton,
+    ImageSkeleton,
+    TextSkeleton,
+} from "@/Components/Skeletons";
 
 export default function Welcome({ auth }) {
     const [loading, setLoading] = useState(true);
@@ -49,6 +54,64 @@ export default function Welcome({ auth }) {
             behavior: "smooth",
         });
     };
+
+    const ProjectSkeleton = () => (
+        <div className="rounded-xl bg-zinc-900/50 h-full backdrop-blur-sm border border-zinc-800 p-8">
+            <div className="flex items-start gap-6">
+                <ImageSkeleton
+                    width="w-20"
+                    height="h-20"
+                    rounded="rounded-xl"
+                />
+                <div className="flex-1 min-w-0">
+                    <TextSkeleton width="w-3/4" height="h-6" className="mb-3" />
+                    <TextSkeleton
+                        width="w-full"
+                        height="h-4"
+                        className="mb-2"
+                    />
+                    <TextSkeleton width="w-2/3" height="h-4" />
+                </div>
+            </div>
+
+            <div className="mt-6 flex flex-wrap gap-2">
+                <TextSkeleton
+                    width="w-16"
+                    height="h-6"
+                    className="rounded-full"
+                />
+                <TextSkeleton
+                    width="w-20"
+                    height="h-6"
+                    className="rounded-full"
+                />
+                <TextSkeleton
+                    width="w-24"
+                    height="h-6"
+                    className="rounded-full"
+                />
+            </div>
+
+            <div className="flex flex-wrap items-center gap-6 mt-6">
+                <div className="flex items-center gap-2">
+                    <TextSkeleton
+                        width="w-8"
+                        height="h-8"
+                        className="rounded-lg"
+                    />
+                    <TextSkeleton width="w-12" height="h-5" />
+                </div>
+                <div className="flex items-center gap-2">
+                    <TextSkeleton
+                        width="w-8"
+                        height="h-8"
+                        className="rounded-lg"
+                    />
+                    <TextSkeleton width="w-16" height="h-5" />
+                </div>
+            </div>
+        </div>
+    );
 
     return (
         <>
@@ -145,8 +208,17 @@ export default function Welcome({ auth }) {
                     <div className="absolute inset-0" />
 
                     {loading ? (
-                        <div className="flex justify-center py-16">
-                            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+                        <div className="container mx-auto px-4">
+                            <div className="max-w-7xl mx-auto">
+                                <h2 className="text-3xl font-bold text-white mb-8">
+                                    Featured Projects
+                                </h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                    <ProjectSkeleton />
+                                    <ProjectSkeleton />
+                                    <ProjectSkeleton />
+                                </div>
+                            </div>
                         </div>
                     ) : error ? (
                         <div className="text-center text-red-500 py-16">

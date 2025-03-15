@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\ProfilePhotoController;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\Admin\AdminNewsController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -21,9 +23,8 @@ Route::get('/about', function () {
     return Inertia::render('About');
 })->name('about');
 
-Route::get('/news', function () {
-    return Inertia::render('News');
-})->name('news');
+Route::get('/news', [NewsController::class, 'index'])->name('news');
+Route::get('/news/{slug}', [NewsController::class, 'show'])->name('news.show');
 
 Route::get('/settings', function () {
     return Inertia::render('Settings');
@@ -41,6 +42,15 @@ Route::middleware('guest')->group(function () {
         ->name('github.redirect');
     Route::get('auth/github/callback', [SocialiteController::class, 'githubCallback'])
         ->name('github.callback');
+});
+
+Route::middleware(['auth', 'can:manage-news'])->group(function () {
+    Route::get('/admin/news', [AdminNewsController::class, 'index'])->name('admin.news.index');
+    Route::get('/admin/news/create', [AdminNewsController::class, 'create'])->name('admin.news.create');
+    Route::post('/admin/news', [AdminNewsController::class, 'store'])->name('admin.news.store');
+    Route::get('/admin/news/{news}/edit', [AdminNewsController::class, 'edit'])->name('admin.news.edit');
+    Route::put('/admin/news/{news}', [AdminNewsController::class, 'update'])->name('admin.news.update');
+    Route::delete('/admin/news/{news}', [AdminNewsController::class, 'destroy'])->name('admin.news.destroy');
 });
 
 require __DIR__.'/auth.php';

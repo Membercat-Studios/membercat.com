@@ -99,3 +99,32 @@ Changelog information for membercat.com. All changes from `0.0.1-Alpha+1` and ab
     -   Implemented server-side filtering and sorting
     -   Optimized API responses with metadata
     -   Added caching for better performance
+
+## 0.3.0-Alpha+1 (2025-03-15)
+
+### Features
+
+-   feat(news): implement news management system
+-   feat(news): create NewsController for handling news posts
+-   feat(news): add NewsCategoryController for managing categories
+-   feat(ui): develop RichTextEditor component for content creation
+-   feat(news): implement category management with CRUD operations
+-   feat(validation): add validation for news posts and categories
+-   feat(ui): create responsive news listing and detail pages
+-   feat(ui): add modern modal system for category management
+-   feat(ui): implement confirmation dialogs for destructive actions
+-   feat(ui): improve error handling and user feedback
+-   feat(ui): ensure responsive design for all news components
+
+### Performance
+
+-   perf(db): optimize database queries for news retrieval
+
+### Refactor
+
+-   refactor(news): add relationship between news posts and categories
+
+### Security
+
+-   security(api): implement proper error handling for API requests
+-   security(news): add security checks for category deletion

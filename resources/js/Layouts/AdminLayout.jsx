@@ -21,6 +21,13 @@ export default function AdminLayout({ children, title }) {
                 >
                     Users
                 </SidebarLink>
+                <SidebarLink
+                    href={route("admin.news.index")}
+                    active={route().current("admin.news.*")}
+                    icon="fas fa-newspaper"
+                >
+                    News
+                </SidebarLink>
                 <SidebarLink href="#" active={false} icon="fas fa-rocket">
                     Projects
                 </SidebarLink>

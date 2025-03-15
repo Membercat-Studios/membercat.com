@@ -1,12 +1,8 @@
 import { Head } from "@inertiajs/react";
-import DocsLayout from "@/Layouts/DocsLayout";
-import { useEffect } from "react";
 
-export default function Show({
-    sectionData,
-    currentSection,
-    tableOfContents,
-}) {
+import DocsLayout from "@/Layouts/DocsLayout";
+
+export default function Show({ sectionData, currentSection, tableOfContents }) {
     return (
         <DocsLayout
             sectionData={sectionData}

@@ -1,8 +1,8 @@
-import { Link } from "@inertiajs/react";
 import { useState, useEffect, useRef } from "react";
-import Navbar from "@/Components/Navbar/Navbar";
-import Footer from "@/Components/Footer";
+
 import DocsSidebar from "@/Components/Docs/DocsSidebar";
+import Footer from "@/Components/Footer";
+import Navbar from "@/Components/Navbar/Navbar";
 
 export default function DocsLayout({
     children,

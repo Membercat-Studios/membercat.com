@@ -60,7 +60,6 @@ export default function Dashboard() {
                         </p>
                     </div>
 
-                    {/* Stats Grid */}
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                         <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
                             <div className="flex items-center">

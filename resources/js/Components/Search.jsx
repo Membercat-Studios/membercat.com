@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useDebounce } from "use-debounce";
 import axios from "axios";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import { useDebounce } from "use-debounce";
 
 export default function Search({ isOpen, setIsOpen }) {
     const [searchTerm, setSearchTerm] = useState("");

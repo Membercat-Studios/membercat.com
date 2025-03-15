@@ -1,7 +1,6 @@
 import { usePage } from "@inertiajs/react";
 import { createContext, useState } from "react";
 
-import Logo from "@/Components/Logo";
 import SidebarLink from "./SidebarLink";
 
 export const SidebarContext = createContext();
@@ -61,6 +60,14 @@ export default function Sidebar({ children }) {
                             icon="fas fa-users"
                         >
                             Users
+                        </SidebarLink>
+
+                        <SidebarLink
+                            href={route("admin.news.index")}
+                            active={route().current("admin.news.index")}
+                            icon="fas fa-newspaper"
+                        >
+                            News
                         </SidebarLink>
 
                         {isAdmin && (

@@ -1,6 +1,7 @@
 import { Head } from "@inertiajs/react";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+
 import ProfileTabs from "@/Components/ProfileTabs";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 
 export default function ProfileLayout({
     children,
