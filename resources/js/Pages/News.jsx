@@ -32,7 +32,7 @@ export default function News({ news, featuredNews, categories }) {
             <main className="min-h-screen bg-zinc-950">
                 <Navbar />
 
-                <section className="relative py-24 overflow-hidden">
+                <section className="relative py-32 overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-b from-zinc-900/80 to-black/90 z-0"></div>
                     <div className="absolute inset-0 bg-[url('/images/news-bg.jpg')] bg-cover bg-center opacity-20 z-[-1]"></div>
 

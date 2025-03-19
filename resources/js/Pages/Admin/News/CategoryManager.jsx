@@ -91,12 +91,6 @@ export default function CategoryManager({ categories = [], onClose, isOpen }) {
                     <h2 className="text-xl font-bold text-white">
                         Manage News Categories
                     </h2>
-                    <button
-                        onClick={onClose}
-                        className="text-zinc-400 hover:text-white transition-colors"
-                    >
-                        <i className="fas fa-times"></i>
-                    </button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

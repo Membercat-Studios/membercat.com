@@ -1,9 +1,6 @@
-import {
-    Dialog,
-    DialogPanel,
-    Transition,
-    TransitionChild,
-} from "@headlessui/react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import Button from "./Button";
 
 export default function Modal({
     children,
@@ -12,8 +9,44 @@ export default function Modal({
     closeable = true,
     onClose = () => {},
 }) {
-    const close = () => {
-        if (closeable) {
+    const [isMounted, setIsMounted] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+        const handleEscape = (e) => {
+            if (closeable && e.key === "Escape") {
+                onClose();
+            }
+        };
+
+        if (show) {
+            document.addEventListener("keydown", handleEscape);
+            document.body.style.overflow = "hidden";
+        }
+
+        return () => {
+            document.removeEventListener("keydown", handleEscape);
+            document.body.style.overflow = "";
+        };
+    }, [show, closeable, onClose]);
+
+    useEffect(() => {
+        if (show) {
+            setIsMounted(true);
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    setIsVisible(true);
+                });
+            });
+        } else {
+            setIsVisible(false);
+            const timer = setTimeout(() => setIsMounted(false), 300);
+            return () => clearTimeout(timer);
+        }
+    }, [show]);
+
+    const handleBackdropClick = (e) => {
+        if (closeable && e.target === e.currentTarget) {
             onClose();
         }
     };
@@ -26,40 +59,40 @@ export default function Modal({
         "2xl": "sm:max-w-2xl",
     }[maxWidth];
 
-    return (
-        <Transition show={show} leave="duration-200">
-            <Dialog
-                as="div"
-                id="modal"
-                className="fixed inset-0 z-50 flex transform items-center overflow-y-auto px-4 py-6 transition-all sm:px-0"
-                onClose={close}
-            >
-                <TransitionChild
-                    enter="ease-out duration-300"
-                    enterFrom="opacity-0"
-                    enterTo="opacity-100"
-                    leave="ease-in duration-200"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                >
-                    <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" />
-                </TransitionChild>
+    if (!isMounted) return null;
 
-                <TransitionChild
-                    enter="ease-out duration-300"
-                    enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                    enterTo="opacity-100 translate-y-0 sm:scale-100"
-                    leave="ease-in duration-200"
-                    leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                    leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                >
-                    <DialogPanel
-                        className={`mb-6 transform overflow-hidden rounded-xl bg-zinc-900 border border-zinc-800 text-white shadow-xl transition-all sm:mx-auto sm:w-full ${maxWidthClass}`}
+    return createPortal(
+        <div
+            className={`fixed inset-0 z-50 flex transform items-center justify-center overflow-y-auto px-4 py-6 transition-all duration-300 ${
+                isVisible ? "opacity-100" : "opacity-0"
+            }`}
+            onClick={handleBackdropClick}
+        >
+            <div
+                className={`absolute inset-0 bg-black/75 backdrop-blur-sm transition-opacity duration-300 ${
+                    isVisible ? "opacity-100" : "opacity-0"
+                }`}
+            />
+
+            <div
+                className={`relative transform overflow-hidden rounded-xl bg-zinc-900 border border-zinc-800 text-white shadow-xl transition-all duration-300 ${maxWidthClass} ${
+                    isVisible
+                        ? "translate-y-0 opacity-100 scale-100"
+                        : "translate-y-4 opacity-0 scale-95"
+                }`}
+            >
+                {closeable && (
+                    <Button
+                        onClick={onClose}
+                        appearance="danger"
+                        className="absolute right-4 top-4 z-10 flex items-center justify-center"
                     >
-                        {children}
-                    </DialogPanel>
-                </TransitionChild>
-            </Dialog>
-        </Transition>
+                        <i className="fas fa-times"></i>
+                    </Button>
+                )}
+                {children}
+            </div>
+        </div>,
+        document.body
     );
 }
