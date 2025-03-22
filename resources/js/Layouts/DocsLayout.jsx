@@ -12,7 +12,6 @@ export default function DocsLayout({
 }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [activeHeading, setActiveHeading] = useState("");
-    const contentRef = useRef(null);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -37,7 +36,7 @@ export default function DocsLayout({
         <div className="min-h-screen bg-zinc-950">
             <Navbar />
 
-            <div className="pt-16">
+            <div className="pt-24">
                 <div className="max-w-7xl mx-auto">
                     <div className="lg:flex lg:gap-8">
                         <div className="hidden lg:block w-64 flex-shrink-0 sticky top-16 h-[calc(100vh-4rem)] border-r border-zinc-800/50">

@@ -8,6 +8,11 @@ use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\ProfilePhotoController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\Admin\AdminNewsController;
+use App\Http\Controllers\ErrorController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\Moderation\ModerationController;
+use App\Http\Controllers\ReportController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -30,8 +35,6 @@ Route::get('/settings', function () {
     return Inertia::render('Settings');
 })->name('settings');
 
-
-
 Route::middleware('guest')->group(function () {
     Route::get('auth/discord/redirect', [SocialiteController::class, 'discordRedirect'])
         ->name('discord.redirect');
@@ -51,6 +54,15 @@ Route::middleware(['auth', 'can:manage-news'])->group(function () {
     Route::get('/admin/news/{news}/edit', [AdminNewsController::class, 'edit'])->name('admin.news.edit');
     Route::put('/admin/news/{news}', [AdminNewsController::class, 'update'])->name('admin.news.update');
     Route::delete('/admin/news/{news}', [AdminNewsController::class, 'destroy'])->name('admin.news.destroy');
+});
+
+Route::get('/401', [ErrorController::class, 'unauthorized'])->name('error.401');
+Route::get('/403', [ErrorController::class, 'forbidden'])->name('error.403');
+Route::get('/404', [ErrorController::class, 'notFound'])->name('error.404');
+Route::get('/500', [ErrorController::class, 'serverError'])->name('error.500');
+
+Route::fallback(function () {
+    return Inertia::render('Util/404')->toResponse(request())->setStatusCode(404);
 });
 
 require __DIR__.'/auth.php';

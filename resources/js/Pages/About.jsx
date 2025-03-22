@@ -1,4 +1,4 @@
-import { Head } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
@@ -437,7 +437,7 @@ export default function About() {
                                 transition={{ duration: 0.5, delay: 0.2 }}
                                 className="flex flex-wrap justify-center gap-4"
                             >
-                                <a
+                                <Link
                                     href="https://dc.kasai.gg"
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -445,8 +445,8 @@ export default function About() {
                                 >
                                     <i className="fab fa-discord"></i>
                                     Join our Discord
-                                </a>
-                                <a
+                                </Link>
+                                <Link
                                     href="https://github.com/membercat-studios"
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -454,8 +454,8 @@ export default function About() {
                                 >
                                     <i className="fab fa-github"></i>
                                     GitHub
-                                </a>
-                                <a
+                                </Link>
+                                <Link
                                     href="https://modrinth.com/organization/membercat"
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -463,7 +463,7 @@ export default function About() {
                                 >
                                     <Icon icon="simple-icons:modrinth" />
                                     Modrinth
-                                </a>
+                                </Link>
                             </motion.div>
                         </div>
                     </div>

@@ -24,9 +24,24 @@ export default function Users({ users }) {
         }
     };
 
-    const handleMakeAdmin = (userId) => {
-        if (confirm("Are you sure you want to make this user an admin?")) {
-            router.post(route("admin.users.make-admin", userId));
+    const handleToggleAdmin = (user) => {
+        if (user.role === "admin") {
+            if (user.id === auth.user.id) {
+                alert("You cannot remove your own admin privileges.");
+                return;
+            }
+
+            if (
+                confirm(
+                    "Are you sure you want to remove admin privileges from this user?"
+                )
+            ) {
+                router.post(route("admin.users.remove-admin", user.id));
+            }
+        } else {
+            if (confirm("Are you sure you want to make this user an admin?")) {
+                router.post(route("admin.users.make-admin", user.id));
+            }
         }
     };
 
@@ -59,6 +74,7 @@ export default function Users({ users }) {
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         className="max-w-xs"
+                        icon="fas fa-search"
                     />
 
                     <select
@@ -143,17 +159,35 @@ export default function Users({ users }) {
                                         </div>
                                     </td>
                                     <td className="whitespace-nowrap flex gap-2 px-6 py-4">
-                                        {user.role !== "admin" && (
-                                            <Button
-                                                className="w-8 h-8 !bg-yellow-500 !text-white"
-                                                onClick={() =>
-                                                    handleMakeAdmin(user.id)
-                                                }
-                                                title="Make user an admin"
-                                            >
-                                                <i className="fas fa-shield"></i>
-                                            </Button>
-                                        )}
+                                        <Button
+                                            className={`w-8 h-8 ${
+                                                user.role === "admin"
+                                                    ? "!bg-red-500 !text-white"
+                                                    : "!bg-yellow-500 !text-white"
+                                            }`}
+                                            onClick={() =>
+                                                handleToggleAdmin(user)
+                                            }
+                                            title={
+                                                user.role === "admin"
+                                                    ? user.id === auth.user.id
+                                                        ? "Cannot remove your own admin privileges"
+                                                        : "Remove admin privileges"
+                                                    : "Make user an admin"
+                                            }
+                                            disabled={
+                                                user.role === "admin" &&
+                                                user.id === auth.user.id
+                                            }
+                                        >
+                                            <i
+                                                className={`fas ${
+                                                    user.role === "admin"
+                                                        ? "fa-user-minus"
+                                                        : "fa-shield"
+                                                }`}
+                                            ></i>
+                                        </Button>
                                         <Button
                                             className="w-8 h-8 !bg-red-500 !text-white"
                                             onClick={() =>

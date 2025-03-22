@@ -5,7 +5,6 @@ import { useState } from "react";
 import Button from "@/Components/Button";
 import Footer from "@/Components/Footer";
 import Navbar from "@/Components/Navbar/Navbar";
-import { ImageSkeleton, TextSkeleton } from "@/Components/Skeletons";
 
 export default function News({ news, featuredNews, categories }) {
     const [selectedCategory, setSelectedCategory] = useState("all");

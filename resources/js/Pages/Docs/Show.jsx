@@ -30,8 +30,9 @@ export default function Show({ sectionData, currentSection, tableOfContents }) {
                     prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4
                     prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-4
                     prose-p:text-zinc-300 prose-p:leading-relaxed
-                    prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+                    prose-a:underline 
                     prose-strong:text-white/90 prose-strong:font-medium
+                    prose-strong a:text-primary prose-strong a:underline
                     prose-code:text-primary/90 prose-code:bg-white/5 prose-code:px-1.5 prose-code:py-0.5 
                     prose-code:rounded-md prose-code:before:content-[''] prose-code:after:content-['']
                     prose-pre:bg-zinc-900 prose-pre:border prose-pre:border-white/5

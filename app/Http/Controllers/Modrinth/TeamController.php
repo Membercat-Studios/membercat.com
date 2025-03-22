@@ -27,7 +27,7 @@ class TeamController extends Controller
     public function fetchRawData()
     {
         $cacheKey = self::CACHE_KEYS['team'];
-        $response = Cache::remember($cacheKey, 300, function () { // 5 mins
+        $response = Cache::remember($cacheKey, 1800, function () { // 30 mins
             return $this->fetchFromApi('membercat', 'Unable to fetch team data');
         });
 
@@ -41,7 +41,7 @@ class TeamController extends Controller
     public function fetchMembers()
     {
         $cacheKey = self::CACHE_KEYS['team'] . ':members';
-        $response = Cache::remember($cacheKey, 600, function () {
+        $response = Cache::remember($cacheKey, 600, function () { // 10 mins
             return $this->fetchFromApi('membercat/members', 'Unable to fetch members');
         });
 

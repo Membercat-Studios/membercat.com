@@ -67,4 +67,25 @@ class UsersController extends Controller
 
         return redirect()->route('admin.users')->with('success', 'User has been made an admin.');
     }
+
+    public function removeAdmin(User $user)
+    {
+        if ($user->id === auth()->id()) {
+            return redirect()->route('admin.users')->with('error', 'You cannot remove your own admin privileges.');
+        }
+
+        if (!$user->isAdmin()) {
+            return redirect()->route('admin.users')->with('error', 'User is not an admin.');
+        }
+
+        $user->role = User::ROLE_USER;
+        $user->save();
+
+        return redirect()->route('admin.users')->with('success', 'Admin privileges removed successfully.');
+    }
+
+    public function getUserCount()
+    {
+        return User::count();
+    }
 } 

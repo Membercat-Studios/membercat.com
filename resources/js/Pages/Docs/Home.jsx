@@ -1,10 +1,16 @@
-import { Head } from "@inertiajs/react";
+import { Head, usePage, router } from "@inertiajs/react";
 import { motion } from "framer-motion";
 
 import { sortSections } from "@/Components/Docs/DocsSidebar";
 import DocsLayout from "@/Layouts/DocsLayout";
 
 export default function DocsHome({ sectionData }) {
+    const { auth } = usePage().props;
+
+    // if (auth.user.role !== "e") {
+    //     return router.visit("/403");
+    // }
+
     return (
         <DocsLayout sectionData={sectionData}>
             <Head title="Documentation" />
@@ -22,38 +28,40 @@ export default function DocsHome({ sectionData }) {
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-6">
-                    {sectionData.this.subSections.sort(sortSections(sectionData)).map((path, i) => {
-                        let section = sectionData.sections[path];
-                        return (
-                            <motion.div
-                                key={path}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: i * 0.1 }}
-                                className="group relative"
-                            >
-                                <div className="absolute -inset-px rounded-xl bg-gradient-to-r from-primary/20 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                <div className="relative rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm p-6 hover:border-primary/20 transition-colors">
-                                    <h2 className="text-2xl font-semibold text-white mb-3">
-                                        {section.title ?? section.name}
-                                    </h2>
-                                    <p className="text-zinc-400 mb-6 min-h-[3rem]">
-                                        {section.description ||
-                                            `${section.subSections.length} guides available`}
-                                    </p>
-                                    <a
-                                        href={route("docs.show", {
-                                            path: path
-                                        })}
-                                        className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
-                                    >
-                                        Get Started
-                                        <i className="fas fa-arrow-right text-xs" />
-                                    </a>
-                                </div>
-                            </motion.div>
-                        )
-                    })}
+                    {sectionData.this.subSections
+                        .sort(sortSections(sectionData))
+                        .map((path, i) => {
+                            let section = sectionData.sections[path];
+                            return (
+                                <motion.div
+                                    key={path}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: i * 0.1 }}
+                                    className="group relative"
+                                >
+                                    <div className="absolute -inset-px rounded-xl bg-gradient-to-r from-primary/20 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    <div className="relative rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm p-6 hover:border-primary/20 transition-colors">
+                                        <h2 className="text-2xl font-semibold text-white mb-3">
+                                            {section.title ?? section.name}
+                                        </h2>
+                                        <p className="text-zinc-400 mb-6 min-h-[3rem]">
+                                            {section.description ||
+                                                `${section.subSections.length} guides available`}
+                                        </p>
+                                        <a
+                                            href={route("docs.show", {
+                                                path: path,
+                                            })}
+                                            className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                                        >
+                                            Get Started
+                                            <i className="fas fa-arrow-right text-xs" />
+                                        </a>
+                                    </div>
+                                </motion.div>
+                            );
+                        })}
                 </div>
             </div>
         </DocsLayout>

@@ -48,6 +48,7 @@ export default function Navbar() {
             label: "Settings",
             icon: "fa-gear",
             href: route("settings"),
+            disabled: true,
         },
         { type: "divider" },
         ...(auth.user?.role === "admin"
@@ -91,15 +92,25 @@ export default function Navbar() {
                         </Link>
 
                         <div className="hidden space-x-6 md:flex">
-                            {NAV_LINKS.map((link) => (
-                                <Link
-                                    key={link.label}
-                                    href={link.href}
-                                    className="text-zinc-300 hover:text-white transition-colors duration-200"
-                                >
-                                    {link.label}
-                                </Link>
-                            ))}
+                            {NAV_LINKS.map((link) =>
+                                link.label === "Settings" ? (
+                                    <span
+                                        key={link.label}
+                                        className="text-zinc-500 cursor-not-allowed transition-colors duration-200"
+                                        title="Settings page is under development"
+                                    >
+                                        {link.label}
+                                    </span>
+                                ) : (
+                                    <Link
+                                        key={link.label}
+                                        href={link.href}
+                                        className="text-zinc-300 hover:text-white transition-colors duration-200"
+                                    >
+                                        {link.label}
+                                    </Link>
+                                )
+                            )}
                         </div>
                     </div>
 
@@ -145,6 +156,17 @@ export default function Navbar() {
                                                     key={index}
                                                     className="h-px bg-zinc-700 my-1"
                                                 />
+                                            ) : item.disabled ? (
+                                                <div
+                                                    key={item.label}
+                                                    className="flex items-center space-x-2 px-3 py-2 rounded-lg text-sm text-zinc-500 cursor-not-allowed"
+                                                    title="Settings page is under development"
+                                                >
+                                                    <i
+                                                        className={`fas ${item.icon} w-4`}
+                                                    />
+                                                    <span>{item.label}</span>
+                                                </div>
                                             ) : (
                                                 <Link
                                                     key={item.label}

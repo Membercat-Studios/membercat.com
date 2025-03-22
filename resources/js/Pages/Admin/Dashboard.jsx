@@ -1,15 +1,17 @@
 import { Head } from "@inertiajs/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 import Sidebar from "@/Components/Sidebar/Sidebar";
 import SidebarLink from "@/Components/Sidebar/SidebarLink";
 
 export default function Dashboard() {
-    const [stats] = useState({
-        totalUsers: 1234,
-        totalProjects: 56,
-        activeUsers: 789,
-        newUsers: 123,
+    const [loading, setLoading] = useState(true);
+    const [stats, setStats] = useState({
+        totalUsers: 0,
+        totalProjects: 0,
+        activeUsers: 0,
+        newUsers: 0,
     });
 
     const [recentActivity] = useState([
@@ -21,6 +23,27 @@ export default function Dashboard() {
             time: "2 hours ago",
         },
     ]);
+
+    useEffect(() => {
+        const fetchUserCount = async () => {
+            setLoading(true);
+            try {
+                const response = await axios.get(
+                    route("admin.users.user-count")
+                );
+                setStats((prevStats) => ({
+                    ...prevStats,
+                    totalUsers: response.data,
+                }));
+            } catch (error) {
+                console.error("Error fetching user count:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUserCount();
+    }, []);
 
     return (
         <div className="flex h-screen bg-zinc-950">
@@ -71,7 +94,11 @@ export default function Dashboard() {
                                         Total Users
                                     </p>
                                     <p className="text-2xl font-semibold text-white">
-                                        {stats.totalUsers}
+                                        {loading ? (
+                                            <i className="fas fa-spinner fa-spin" />
+                                        ) : (
+                                            stats.totalUsers
+                                        )}
                                     </p>
                                 </div>
                             </div>

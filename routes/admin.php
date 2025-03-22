@@ -23,6 +23,8 @@ Route::prefix('admin')->middleware(['web', 'auth', AdminMiddleware::class])->gro
     Route::put('/users/{user}', [UsersController::class, 'update'])->name('admin.users.update');
     Route::delete('/users/{user}', [UsersController::class, 'destroy'])->name('admin.users.destroy');
     Route::post('/users/{user}/make-admin', [UsersController::class, 'makeAdmin'])->name('admin.users.make-admin');
+    Route::post('/users/{user}/remove-admin', [UsersController::class, 'removeAdmin'])->name('admin.users.remove-admin');
+    Route::get('/users/user-count', [UsersController::class, 'getUserCount'])->name('admin.users.user-count');
     
     Route::get('/news', [AdminNewsController::class, 'index'])->name('admin.news.index');
     Route::get('/news/create', [AdminNewsController::class, 'create'])->name('admin.news.create');
@@ -31,7 +33,6 @@ Route::prefix('admin')->middleware(['web', 'auth', AdminMiddleware::class])->gro
     Route::put('/news/{news}', [AdminNewsController::class, 'update'])->name('admin.news.update');
     Route::delete('/news/{news}', [AdminNewsController::class, 'destroy'])->name('admin.news.destroy');
 
-    // Category routes
     Route::post('/news/categories', [NewsCategoryController::class, 'store'])->name('admin.news.categories.store');
     Route::put('/news/categories/{category}', [NewsCategoryController::class, 'update'])->name('admin.news.categories.update');
     Route::delete('/news/categories/{category}', [NewsCategoryController::class, 'destroy'])->name('admin.news.categories.destroy');

@@ -119,3 +119,13 @@ Changelog information for membercat.com. All changes from `0.0.1-Alpha+1` and ab
     -   Added relationship between news posts and categories
     -   Implemented proper error handling for API requests
     -   Added security checks for category deletion
+
+## 0.3.1-Alpha+1 (2025-03-20)
+
+-   Fixed issues with "Make Admin" button on Admin User page.
+-   Removed unused controllers and React components.
+-   Added multiple utility pages (401, 403, 404, 500)
+-   Created mock settings page for Admin Dashboard.
+-   Admin dashboard now reflects proper user counts. (Other stats coming soon)
+-   Refactored various components and routes.
+-   Role middleware to improve access control.
