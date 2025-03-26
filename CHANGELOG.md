@@ -142,3 +142,4 @@ Changelog information for membercat.com. All changes from `0.0.1-Alpha+1` and ab
 -   Replaced scroll indicator on home page.
 -   Blurred Github login (disabled for now)
 -   Docs now temporarily disabled for non-admins.
+-   Updated dependencies (`laravel/framework`, `vite`, `@babel/eslint-parser`)
