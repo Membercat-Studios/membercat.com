@@ -97,6 +97,18 @@ export default function Search({ isOpen, setIsOpen }) {
         return typeMap[type] || type.charAt(0).toUpperCase() + type.slice(1);
     };
 
+    const handleSearch = async (e) => {
+        e.preventDefault();
+
+        try {
+            await axios.post(route("log.activity"), {
+                type: "search",
+                action: "searched for",
+                target: searchTerm,
+            });
+        } catch (error) {}
+    };
+
     if (!isOpen) return null;
 
     return (

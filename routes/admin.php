@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AdminMiddleware;
 use Inertia\Inertia;
 use App\Http\Controllers\Admin\NewsCategoryController;
+use App\Http\Controllers\Admin\ActivityController;
 
 Route::prefix('admin')->middleware(['web', 'auth', AdminMiddleware::class])->group(function () {
     Route::get('/dashboard', function () {
@@ -36,6 +37,8 @@ Route::prefix('admin')->middleware(['web', 'auth', AdminMiddleware::class])->gro
     Route::post('/news/categories', [NewsCategoryController::class, 'store'])->name('admin.news.categories.store');
     Route::put('/news/categories/{category}', [NewsCategoryController::class, 'update'])->name('admin.news.categories.update');
     Route::delete('/news/categories/{category}', [NewsCategoryController::class, 'destroy'])->name('admin.news.categories.destroy');
+
+    Route::get('/activity/recent', [ActivityController::class, 'recent'])->name('admin.activity.recent');
 });
 
 

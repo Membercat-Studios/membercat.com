@@ -11,6 +11,7 @@ import { ImageSkeleton, TextSkeleton } from "@/Components/Skeletons";
 
 export default function Projects({ auth }) {
     const [loading, setLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
     const [error, setError] = useState(null);
     const [projects, setProjects] = useState([]);
     const [metadata, setMetadata] = useState({
@@ -72,32 +73,44 @@ export default function Projects({ auth }) {
             document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    useEffect(() => {
-        const fetchProjects = async () => {
-            try {
-                setLoading(true);
-                const response = await axios.get(
-                    route("modrinth.membercat-projects"),
-                    {
-                        params: filters,
-                    }
-                );
-
-                if (response.data.error) {
-                    throw new Error(response.data.error);
+    const fetchProjects = async (skipCache = false) => {
+        try {
+            setLoading(true);
+            const response = await axios.get(
+                route("modrinth.membercat-projects"),
+                {
+                    params: {
+                        ...filters,
+                        skipCache,
+                    },
                 }
+            );
 
-                setProjects(response.data.projects);
-                setMetadata(response.data.metadata);
-            } catch (error) {
-                setError(error.message || "Failed to load projects");
-            } finally {
-                setLoading(false);
+            if (response.data.error) {
+                throw new Error(response.data.error);
             }
-        };
 
+            setProjects(response.data.projects);
+            setMetadata(response.data.metadata);
+        } catch (error) {
+            setError(error.message || "Failed to load projects");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         fetchProjects();
     }, [filters]);
+
+    const refresh = async () => {
+        setRefreshing(true);
+        setLoading(true);
+
+        await fetchProjects(true);
+
+        setRefreshing(false);
+    };
 
     const formatDownloads = (downloads) => {
         if (downloads >= 1000000) {
@@ -198,6 +211,19 @@ export default function Projects({ auth }) {
             </div>
         </div>
     );
+
+    const handleProjectClick = async (project) => {
+        try {
+            await axios.post(route("log.activity"), {
+                type: "project_click",
+                action: "clicked on project",
+                target: project.name,
+                target_id: project.id,
+            });
+        } catch (error) {}
+
+        window.open(`https://modrinth.com/project/${project.slug}`, "_blank");
+    };
 
     return (
         <>
@@ -307,6 +333,20 @@ export default function Projects({ auth }) {
                                 </div>
 
                                 <div className="flex items-center gap-2">
+                                    <button
+                                        className="flex items-center gap-2 px-3 py-1.5 bg-zinc-800/80 rounded-full text-sm text-white hover:bg-zinc-700/80 transition-colors relative"
+                                        onClick={refresh}
+                                        disabled={refreshing}
+                                    >
+                                        <i
+                                            className={`fas fa-sync ${
+                                                refreshing ? "animate-spin" : ""
+                                            }`}
+                                        ></i>
+                                        {refreshing && (
+                                            <span className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"></span>
+                                        )}
+                                    </button>
                                     <span className="text-zinc-400 text-sm">
                                         Sort by:
                                     </span>
@@ -548,6 +588,10 @@ export default function Projects({ auth }) {
                                                 animate={{ opacity: 1 }}
                                                 whileHover={{ y: -5 }}
                                                 transition={{ duration: 0.3 }}
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    handleProjectClick(project);
+                                                }}
                                             >
                                                 <div className="relative">
                                                     {project.banner_url ? (

@@ -8,6 +8,7 @@ import RichTextEditor from "@/Components/RichTextEditor";
 
 export default function CreateNews({ categories = [] }) {
     const [imagePreview, setImagePreview] = useState(null);
+    const [imageError, setImageError] = useState(null);
     const fileInputRef = useRef(null);
 
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -31,6 +32,19 @@ export default function CreateNews({ categories = [] }) {
         const file = e.target.files[0];
         if (!file) return;
 
+        setImageError(null);
+
+        if (file.size > 2 * 1024 * 1024) {
+            setImageError("Image size exceeds 2MB limit");
+            return;
+        }
+
+        const validTypes = ["image/jpeg", "image/png", "image/gif"];
+        if (!validTypes.includes(file.type)) {
+            setImageError("Invalid file type. Please upload PNG, JPG, or GIF");
+            return;
+        }
+
         setData("image", file);
 
         const reader = new FileReader();
@@ -43,6 +57,7 @@ export default function CreateNews({ categories = [] }) {
     const removeImage = () => {
         setData("image", null);
         setImagePreview(null);
+        setImageError(null);
         if (fileInputRef.current) {
             fileInputRef.current.value = "";
         }
@@ -204,7 +219,7 @@ export default function CreateNews({ categories = [] }) {
                                                         onChange={
                                                             handleImageChange
                                                         }
-                                                        accept="image/*"
+                                                        accept="image/png, image/jpeg, image/gif"
                                                     />
                                                 </label>
                                                 <p className="pl-1">
@@ -217,6 +232,11 @@ export default function CreateNews({ categories = [] }) {
                                         </div>
                                     )}
                                 </div>
+                                {(imageError || errors.image) && (
+                                    <p className="mt-2 text-xs text-red-500">
+                                        {imageError || errors.image}
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </div>

@@ -13,6 +13,8 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Moderation\ModerationController;
 use App\Http\Controllers\ReportController;
+use App\Services\ActivityService;
+use Illuminate\Http\Request;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -64,6 +66,24 @@ Route::get('/500', [ErrorController::class, 'serverError'])->name('error.500');
 Route::fallback(function () {
     return Inertia::render('Util/404')->toResponse(request())->setStatusCode(404);
 });
+
+Route::post('/log-activity', function (Request $request) {
+    $validated = $request->validate([
+        'type' => 'required|string',
+        'action' => 'required|string',
+        'target' => 'nullable|string',
+        'target_id' => 'nullable|string',
+    ]);
+    
+    ActivityService::log(
+        $validated['type'],
+        $validated['action'],
+        $validated['target'] ?? null,
+        $validated['target_id'] ?? null
+    );
+    
+    return response()->json(['success' => true]);
+})->name('log.activity');
 
 require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';

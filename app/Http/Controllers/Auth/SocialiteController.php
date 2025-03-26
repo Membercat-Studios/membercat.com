@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Exception\ClientException;
+use App\Services\ActivityService;
 
 class SocialiteController extends Controller
 {
@@ -79,6 +80,8 @@ class SocialiteController extends Controller
 
             Auth::login($user);
             
+            ActivityService::log('authentication', 'logged in via discord');
+            
             return redirect('/');
     }
 
@@ -113,6 +116,8 @@ class SocialiteController extends Controller
             }
 
             Auth::login($user);
+            
+            ActivityService::log('authentication', 'logged in via github');
             
             return redirect('/');
     }

@@ -4,13 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import Avatar from "@/Components/Avatar";
 import Logo from "@/Components/Logo";
 
-const NAV_LINKS = [
-    { href: route("home"), label: "Home" },
-    { href: route("projects"), label: "Projects" },
-    { href: route("about"), label: "About" },
-    { href: route("news"), label: "News" },
-];
-
 export default function Navbar() {
     const { auth } = usePage().props;
     const [mounted, setMounted] = useState(false);
@@ -42,6 +35,29 @@ export default function Navbar() {
     const handleLogout = () => {
         setLoading(true);
     };
+
+    const NAV_LINKS = [
+        {
+            href: route("home"),
+            label: "Home",
+            active: route().current("home"),
+        },
+        {
+            href: route("projects"),
+            label: "Projects",
+            active: route().current("projects"),
+        },
+        {
+            href: route("about"),
+            label: "About",
+            active: route().current("about"),
+        },
+        {
+            href: route("news"),
+            label: "News",
+            active: route().current("news"),
+        },
+    ];
 
     const userMenuItems = [
         {
@@ -84,14 +100,11 @@ export default function Navbar() {
             <div className="container mx-auto max-w-7xl px-4">
                 <div className="flex items-center justify-between rounded-xl border border-zinc-700 bg-zinc-900/60 px-6 py-3 shadow-lg backdrop-blur-md">
                     <div className="flex items-center space-x-8">
-                        <Link
-                            href="/"
-                            className="flex items-center space-x-2 group"
-                        >
+                        <Link href="/" className="flex items-center group">
                             <Logo className="h-10 w-10 fill-current text-primary transition-transform duration-300 group-hover:scale-110" />
                         </Link>
 
-                        <div className="hidden space-x-6 md:flex">
+                        <div className="hidden space-x-2 md:flex">
                             {NAV_LINKS.map((link) =>
                                 link.label === "Settings" ? (
                                     <span
@@ -105,9 +118,16 @@ export default function Navbar() {
                                     <Link
                                         key={link.label}
                                         href={link.href}
-                                        className="text-zinc-300 hover:text-white transition-colors duration-200"
+                                        className={`relative px-2 py-1 transition-all duration-300 ${
+                                            link.active
+                                                ? "text-white font-medium"
+                                                : "text-zinc-300 hover:text-white"
+                                        }`}
                                     >
                                         {link.label}
+                                        {link.active && (
+                                            <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary rounded-full transform origin-left animate-[growWidth_0.3s_ease-in-out]"></span>
+                                        )}
                                     </Link>
                                 )
                             )}

@@ -26,9 +26,14 @@ class ProjectController extends Controller
         return response()->json(['error' => $errorMessage], 500);
     }
 
-    public function fetchRawData()
+    public function fetchRawData($skipCache = false)
     {
         $cacheKey = self::CACHE_KEYS['projects'];
+        
+        if ($skipCache) {
+            Cache::forget($cacheKey);
+        }
+        
         $response = Cache::remember($cacheKey, 300, function () {
             return $this->fetchFromApi('organization/membercat/projects', 'Unable to fetch projects');
         });
@@ -40,9 +45,14 @@ class ProjectController extends Controller
         return $response;
     }
 
-    public function fetchProject($projectId)
+    public function fetchProject($projectId, $skipCache = false)
     {
         $cacheKey = self::CACHE_KEYS['project'] . $projectId;
+        
+        if ($skipCache) {
+            Cache::forget($cacheKey);
+        }
+        
         $response = Cache::remember($cacheKey, 300, function () use ($projectId) {
             return $this->fetchFromApi("project/{$projectId}", 'Unable to fetch project');
         });
@@ -86,7 +96,8 @@ class ProjectController extends Controller
 
     public function fetchMembercatProjects(Request $request)
     {
-        $projects = $this->fetchRawData();
+        $skipCache = $request->boolean('skipCache', false);
+        $projects = $this->fetchRawData($skipCache);
         
         if (isset($projects['error'])) {
             return $projects;
@@ -135,8 +146,8 @@ class ProjectController extends Controller
             $collection = $collection->sortByDesc('downloads');
         }
         
-        $enhancedProjects = $collection->map(function ($project) {
-            $fullProject = $this->fetchProject($project['id']);
+        $enhancedProjects = $collection->map(function ($project) use ($skipCache) {
+            $fullProject = $this->fetchProject($project['id'], $skipCache);
             
             $project['banner_url'] = $this->getBannerFromGallery($fullProject['gallery'] ?? []);
             
@@ -185,5 +196,11 @@ class ProjectController extends Controller
         })
         ->values()
         ->toArray();
+    }
+
+    public function projectCount()
+    {
+        $projects = $this->fetchRawData();
+        return count($projects);
     }
 }

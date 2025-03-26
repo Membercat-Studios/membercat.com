@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
+use App\Services\ActivityService;
 
 class UsersController extends Controller
 {
@@ -65,6 +66,13 @@ class UsersController extends Controller
         $user->role = User::ROLE_ADMIN;
         $user->save();
 
+        ActivityService::log(
+            'admin_action',
+            'made user an admin',
+            $user->name,
+            $user->id
+        );
+
         return redirect()->route('admin.users')->with('success', 'User has been made an admin.');
     }
 
@@ -80,6 +88,13 @@ class UsersController extends Controller
 
         $user->role = User::ROLE_USER;
         $user->save();
+
+        ActivityService::log(
+            'admin_action',
+            'removed admin privileges from',
+            $user->name,
+            $user->id
+        );
 
         return redirect()->route('admin.users')->with('success', 'Admin privileges removed successfully.');
     }
