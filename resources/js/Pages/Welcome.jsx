@@ -183,25 +183,13 @@ export default function Welcome({ auth }) {
                         </div>
                     </div>
 
-                    <Button
-                        size="sm"
-                        onClick={scrollToProjects}
-                        className="
-                            h-8 w-8
-                            absolute 
-                            bottom-8
-                            left-1/2 
-                            -translate-x-1/2
-                            text-white/50
-                            hover:text-primary
-                            transition-colors
-                            animate-bounce
-                            z-10
-                        "
-                        aria-label="Scroll to projects"
-                    >
-                        <i className="fas fa-chevron-down text-md text-white" />
-                    </Button>
+                    <div>
+                        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-fadeIn">
+                            <div className="w-8 h-12 rounded-full border-2 border-gray-400 dark:border-gray-600 flex justify-center pt-2">
+                                <div className="w-1.5 h-3 mt-1 bg-gray-400 dark:bg-gray-600 rounded-full animate-bounce" />
+                            </div>
+                        </div>
+                    </div>
                 </section>
 
                 <section className="relative bg-black py-24">

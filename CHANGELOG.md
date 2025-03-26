@@ -129,3 +129,16 @@ Changelog information for membercat.com. All changes from `0.0.1-Alpha+1` and ab
 -   Admin dashboard now reflects proper user counts. (Other stats coming soon)
 -   Refactored various components and routes.
 -   Role middleware to improve access control.
+
+## 0.3.1-Alpha+2 (2025-03-26)
+
+-   Implemented recent activity tracking.
+-   Navbar now shows active route/page.
+-   Created mock page for Settings.
+-   Small performance improvements.
+
+## 0.3.1-Alpha+3 (2025-03-27)
+
+-   Replaced scroll indicator on home page.
+-   Blurred Github login (disabled for now)
+-   Docs now temporarily disabled for non-admins.

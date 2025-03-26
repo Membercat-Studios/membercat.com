@@ -29,13 +29,10 @@ export default function Login({ status }) {
                     <i className="fab fa-discord text-xl"></i>
                     <span className="font-medium">Continue with Discord</span>
                 </a>
-                <a
-                    href={route("github.redirect")}
-                    className="flex items-center justify-center space-x-3 rounded-xl bg-zinc-800/50 px-4 py-3.5 text-zinc-300 transition-all duration-300 hover:bg-zinc-700 hover:text-white"
-                >
+                <div className="flex items-center justify-center space-x-3 rounded-xl bg-zinc-800/50 px-4 py-3.5 text-zinc-300 opacity-50 cursor-not-allowed">
                     <i className="fab fa-github text-xl"></i>
                     <span className="font-medium">Continue with GitHub</span>
-                </a>
+                </div>
             </div>
         </GuestLayout>
     );
