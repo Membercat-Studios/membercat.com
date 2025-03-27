@@ -143,3 +143,9 @@ Changelog information for membercat.com. All changes from `0.0.1-Alpha+1` and ab
 -   Blurred Github login (disabled for now)
 -   Docs now temporarily disabled for non-admins.
 -   Updated dependencies (`laravel/framework`, `vite`, `@babel/eslint-parser`)
+
+## 0.3.1-Alpha+4 (2025-03-27)
+
+-   Added seperate Activity page to Admin Dashboard. (With pagination)
+-   Increased cache expiration time for projects from 5 minutes to 10 minutes.
+-   Implemented a no news posts message on the News page.

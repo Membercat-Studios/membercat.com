@@ -70,6 +70,13 @@ export default function Sidebar({ children }) {
                             News
                         </SidebarLink>
 
+                        <SidebarLink
+                            href={route("admin.activity")}
+                            active={route().current("admin.activity")}
+                            icon="fas fa-chart-line"
+                        >
+                            Activity
+                        </SidebarLink>
                         {isAdmin && (
                             <SidebarLink
                                 href={route("admin.settings")}

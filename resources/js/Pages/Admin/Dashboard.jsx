@@ -178,20 +178,19 @@ export default function Dashboard() {
                         )}
                     </div>
 
-                    <div className="mt-10">
-                        <div className="flex items-center justify-between mb-5">
-                            <h2 className="text-xl font-semibold text-white">
-                                <i className="fas fa-history mr-2 text-primary/70"></i>
+                    <div className="col-span-1 lg:col-span-2 py-12">
+                        <div className="mb-4 flex items-center justify-between">
+                            <h2 className="text-xl font-bold text-white">
                                 Recent Activity
                             </h2>
-                            {!loading && recentActivity.length > 0 && (
-                                <button className="text-xs text-primary hover:text-primary/80 transition-colors flex items-center">
-                                    <span>View all activity</span>
-                                    <i className="fas fa-chevron-right ml-1 text-[10px]"></i>
-                                </button>
-                            )}
+                            <a
+                                href={route("admin.activity")}
+                                className="text-primary hover:text-primary-dark transition-colors text-sm flex items-center gap-1"
+                            >
+                                View All{" "}
+                                <i className="fas fa-arrow-right text-xs"></i>
+                            </a>
                         </div>
-
                         <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 overflow-hidden shadow-lg shadow-black/10">
                             {loading ? (
                                 <div className="divide-y divide-zinc-800/80">
@@ -236,108 +235,127 @@ export default function Dashboard() {
                                 </div>
                             ) : (
                                 <div className="divide-y divide-zinc-800/80">
-                                    {recentActivity.map((activity) => (
-                                        <div
-                                            key={activity.id}
-                                            className="flex items-start p-4 hover:bg-zinc-800/20 transition-colors duration-150"
-                                        >
+                                    {recentActivity
+                                        .slice(0, 5)
+                                        .map((activity) => (
                                             <div
-                                                className={`rounded-full p-2.5 ${getActivityIconClass(
-                                                    activity.type
-                                                )} mt-0.5`}
+                                                key={activity.id}
+                                                className="flex items-start p-4 hover:bg-zinc-800/20 transition-colors duration-150"
                                             >
-                                                <i
-                                                    className={getActivityIcon(
+                                                <div
+                                                    className={`rounded-full p-2.5 ${getActivityIconClass(
                                                         activity.type
-                                                    )}
-                                                />
-                                            </div>
-                                            <div className="ml-4 flex-1 flex justify-between">
-                                                <div className="flex-1 pr-4">
-                                                    <p className="text-sm text-white leading-snug">
-                                                        <span className="font-medium text-primary">
-                                                            {activity.user_name}
-                                                        </span>{" "}
-                                                        <span className="text-zinc-300">
-                                                            {activity.action}
-                                                        </span>{" "}
-                                                        {activity.target && (
-                                                            <span className="text-zinc-400">
-                                                                {
-                                                                    activity.target
-                                                                }
-                                                            </span>
+                                                    )} mt-0.5`}
+                                                >
+                                                    <i
+                                                        className={getActivityIcon(
+                                                            activity.type
                                                         )}
-                                                    </p>
-                                                    <div className="flex items-center mt-2 flex-wrap gap-2">
-                                                        <p className="text-xs text-zinc-500 flex items-center">
-                                                            <i className="fas fa-clock mr-1.5 text-zinc-600"></i>
-                                                            <span
-                                                                title={new Date(
-                                                                    activity.created_at
-                                                                ).toLocaleString()}
-                                                                className="hover:text-zinc-400 transition-colors cursor-help"
-                                                            >
-                                                                {formatTimeAgo(
-                                                                    activity.created_at
-                                                                )}
-                                                            </span>
+                                                    />
+                                                </div>
+                                                <div className="ml-4 flex-1 flex justify-between">
+                                                    <div className="flex-1 pr-4">
+                                                        <p className="text-sm text-white leading-snug">
+                                                            <span className="font-medium text-primary">
+                                                                {
+                                                                    activity.user_name
+                                                                }
+                                                            </span>{" "}
+                                                            <span className="text-zinc-300">
+                                                                {
+                                                                    activity.action
+                                                                }
+                                                            </span>{" "}
+                                                            {activity.target && (
+                                                                <span className="text-zinc-400">
+                                                                    {
+                                                                        activity.target
+                                                                    }
+                                                                </span>
+                                                            )}
                                                         </p>
-                                                        {activity.type && (
-                                                            <span className="px-1.5 py-0.5 text-[10px] rounded bg-zinc-800 text-zinc-400 uppercase tracking-wide font-medium">
-                                                                {activity.type}
-                                                            </span>
+                                                        <div className="flex items-center mt-2 flex-wrap gap-2">
+                                                            <p className="text-xs text-zinc-500 flex items-center">
+                                                                <i className="fas fa-clock mr-1.5 text-zinc-600"></i>
+                                                                <span
+                                                                    title={new Date(
+                                                                        activity.created_at
+                                                                    ).toLocaleString()}
+                                                                    className="hover:text-zinc-400 transition-colors cursor-help"
+                                                                >
+                                                                    {formatTimeAgo(
+                                                                        activity.created_at
+                                                                    )}
+                                                                </span>
+                                                            </p>
+                                                            {activity.type && (
+                                                                <span className="px-1.5 py-0.5 text-[10px] rounded bg-zinc-800 text-zinc-400 uppercase tracking-wide font-medium">
+                                                                    {
+                                                                        activity.type
+                                                                    }
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="flex flex-col items-end gap-2 min-w-[140px] justify-center">
+                                                        {activity.ip_address && (
+                                                            <div className="group relative">
+                                                                <span className="text-xs text-zinc-500 bg-zinc-800/70 px-2 py-0.5 rounded blur-[3px] group-hover:blur-none transition-all duration-200 cursor-default font-mono">
+                                                                    {
+                                                                        activity.ip_address
+                                                                    }
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                        {activity.user_agent && (
+                                                            <div className="group relative">
+                                                                <span className="text-xs text-zinc-600 flex items-center cursor-help hover:text-zinc-400 transition-colors">
+                                                                    <i className="fas fa-desktop mr-1.5"></i>
+                                                                    <span className="truncate max-w-[100px] xl:max-w-[200px]">
+                                                                        {getBrowserInfo(
+                                                                            activity.user_agent
+                                                                        )}
+                                                                    </span>
+                                                                </span>
+                                                                <div className="absolute bottom-full right-0 mb-2 w-72 p-3 bg-zinc-800 rounded-md shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 text-xs text-zinc-300 z-50 border border-zinc-700/50">
+                                                                    <p className="mb-2 pb-2 border-b border-zinc-700">
+                                                                        <span className="font-semibold">
+                                                                            Browser:
+                                                                        </span>{" "}
+                                                                        {getBrowserInfo(
+                                                                            activity.user_agent
+                                                                        )}
+                                                                    </p>
+                                                                    <p className="break-words">
+                                                                        <span className="font-semibold">
+                                                                            User
+                                                                            Agent:
+                                                                        </span>{" "}
+                                                                        <span className="text-zinc-400 font-mono text-[10px] leading-relaxed block mt-1">
+                                                                            {
+                                                                                activity.user_agent
+                                                                            }
+                                                                        </span>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
                                                         )}
                                                     </div>
                                                 </div>
-
-                                                <div className="flex flex-col items-end gap-2 min-w-[140px] justify-center">
-                                                    {activity.ip_address && (
-                                                        <div className="group relative">
-                                                            <span className="text-xs text-zinc-500 bg-zinc-800/70 px-2 py-0.5 rounded blur-[3px] group-hover:blur-none transition-all duration-200 cursor-default font-mono">
-                                                                {
-                                                                    activity.ip_address
-                                                                }
-                                                            </span>
-                                                        </div>
-                                                    )}
-                                                    {activity.user_agent && (
-                                                        <div className="group relative">
-                                                            <span className="text-xs text-zinc-600 flex items-center cursor-help hover:text-zinc-400 transition-colors">
-                                                                <i className="fas fa-desktop mr-1.5"></i>
-                                                                <span className="truncate max-w-[100px] xl:max-w-[200px]">
-                                                                    {getBrowserInfo(
-                                                                        activity.user_agent
-                                                                    )}
-                                                                </span>
-                                                            </span>
-                                                            <div className="absolute bottom-full right-0 mb-2 w-72 p-3 bg-zinc-800 rounded-md shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 text-xs text-zinc-300 z-50 border border-zinc-700/50">
-                                                                <p className="mb-2 pb-2 border-b border-zinc-700">
-                                                                    <span className="font-semibold">
-                                                                        Browser:
-                                                                    </span>{" "}
-                                                                    {getBrowserInfo(
-                                                                        activity.user_agent
-                                                                    )}
-                                                                </p>
-                                                                <p className="break-words">
-                                                                    <span className="font-semibold">
-                                                                        User
-                                                                        Agent:
-                                                                    </span>{" "}
-                                                                    <span className="text-zinc-400 font-mono text-[10px] leading-relaxed block mt-1">
-                                                                        {
-                                                                            activity.user_agent
-                                                                        }
-                                                                    </span>
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </div>
                                             </div>
+                                        ))}
+                                    {recentActivity.length > 5 && (
+                                        <div className="p-3 bg-zinc-800/30 text-center">
+                                            <a
+                                                href={route("admin.activity")}
+                                                className="text-sm text-primary hover:text-primary-dark transition-colors"
+                                            >
+                                                View {recentActivity.length - 5}{" "}
+                                                more activities
+                                            </a>
                                         </div>
-                                    ))}
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -393,7 +411,6 @@ function getActivityIconClass(type) {
 function getBrowserInfo(userAgent) {
     if (!userAgent) return "Unknown";
 
-    // Extract browser name and version
     let browser = "Unknown";
 
     if (userAgent.includes("Firefox")) {
@@ -410,7 +427,6 @@ function getBrowserInfo(userAgent) {
         browser = "Opera";
     }
 
-    // Extract OS
     let os = "Unknown";
 
     if (userAgent.includes("Windows")) {

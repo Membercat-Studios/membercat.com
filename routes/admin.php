@@ -16,6 +16,8 @@ Route::prefix('admin')->middleware(['web', 'auth', AdminMiddleware::class])->gro
     Route::get('/settings', function () {
         return Inertia::render('Admin/Settings');
     })->name('admin.settings');
+
+    Route::get('/activity', [ActivityController::class, 'index'])->name('admin.activity');
     
     Route::get('/users', [UsersController::class, 'index'])->name('admin.users');
     Route::get('/users/create', [UsersController::class, 'create'])->name('admin.users.create');
@@ -39,6 +41,7 @@ Route::prefix('admin')->middleware(['web', 'auth', AdminMiddleware::class])->gro
     Route::delete('/news/categories/{category}', [NewsCategoryController::class, 'destroy'])->name('admin.news.categories.destroy');
 
     Route::get('/activity/recent', [ActivityController::class, 'recent'])->name('admin.activity.recent');
+    Route::get('/activity/list', [ActivityController::class, 'list'])->name('admin.activity.list');
 });
 
 

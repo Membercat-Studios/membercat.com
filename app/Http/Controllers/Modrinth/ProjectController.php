@@ -34,7 +34,7 @@ class ProjectController extends Controller
             Cache::forget($cacheKey);
         }
         
-        $response = Cache::remember($cacheKey, 300, function () {
+        $response = Cache::remember($cacheKey, 600, function () {
             return $this->fetchFromApi('organization/membercat/projects', 'Unable to fetch projects');
         });
 
@@ -53,7 +53,7 @@ class ProjectController extends Controller
             Cache::forget($cacheKey);
         }
         
-        $response = Cache::remember($cacheKey, 300, function () use ($projectId) {
+        $response = Cache::remember($cacheKey, 600, function () use ($projectId) {
             return $this->fetchFromApi("project/{$projectId}", 'Unable to fetch project');
         });
 
