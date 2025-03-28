@@ -229,7 +229,7 @@ export default function Navbar() {
                         ) : (
                             <Link
                                 href={route("login")}
-                                className="flex items-center justify-center space-x-2 rounded-lg bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-all duration-150 hover:bg-primary hover:text-white"
+                                className="flex items-center justify-center gap-2 rounded-lg bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-all duration-150 hover:bg-primary hover:text-white"
                             >
                                 <i className="fas fa-right-to-bracket" />
                                 <span>Sign in</span>
